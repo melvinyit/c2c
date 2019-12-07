@@ -1,0 +1,11 @@
+{
+  "name": "c2cserver",
+  "version": "1.0.0",
+  "description": "backend server for car2car application",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Melvin Yit",
+  "license": "ISC"
+}

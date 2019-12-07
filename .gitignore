@@ -1,0 +1,5 @@
+node_modules
+conf.sql.js
+.env
+ca-certificate.crt
+secret.txt
