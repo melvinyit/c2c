@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SingleComponent } from './single.component';
+import { ManageLocationsComponent } from './manage-locations.component';
 
-describe('SingleComponent', () => {
-  let component: SingleComponent;
-  let fixture: ComponentFixture<SingleComponent>;
+describe('ManageLocationsComponent', () => {
+  let component: ManageLocationsComponent;
+  let fixture: ComponentFixture<ManageLocationsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SingleComponent ]
+      declarations: [ ManageLocationsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SingleComponent);
+    fixture = TestBed.createComponent(ManageLocationsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -13,6 +13,11 @@ import { TnCComponent } from './components/main/other/tn-c.component';
 import { ListComponent } from './components/main/cars/list.component';
 import { IndividualComponent } from './components/main/cars/individual.component';
 import { LoginComponent } from './components/main/authentication/login.component';
+import { RegisterRenterComponent } from './components/main/authentication/register-renter.component';
+import { RegisterOwnerComponent } from './components/main/authentication/register-owner.component';
+import { RenterModule } from './modules/renter.module';
+import { OwnerModule } from './modules/owner.module';
+import { AdminModule } from './modules/admin.module';
 
 @NgModule({
   declarations: [
@@ -26,11 +31,16 @@ import { LoginComponent } from './components/main/authentication/login.component
     TnCComponent,
     ListComponent,
     IndividualComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterRenterComponent,
+    RegisterOwnerComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RenterModule,
+    OwnerModule,
+    AdminModule
   ],
   providers: [],
   bootstrap: [AppComponent]
