@@ -12,6 +12,7 @@ import { TnCComponent } from './components/main/other/tn-c.component';
 import { FAQComponent } from './components/main/other/faq.component';
 import { AboutUsComponent } from './components/main/other/about-us.component';
 import { ContactUsComponent } from './components/main/other/contact-us.component';
+import { RenterAuthGuard } from './guards/renter-auth.guard';
 
 
 const routes: Routes = [
@@ -30,9 +31,13 @@ const routes: Routes = [
   {path:'register/owner',component:RegisterOwnerComponent},
   {path:'renter',
     loadChildren: () => import('./modules/renter.module').then(m => m.RenterModule),
-    //canActivateChild: [ AuthService ]
+    canActivateChild: [RenterAuthGuard] 
   },
   {path:'owner',
+    loadChildren: () => import('./modules/owner.module').then(m => m.OwnerModule),
+    //canActivateChild: [ AuthService ]
+  },
+  {path:'admin',
     loadChildren: () => import('./modules/owner.module').then(m => m.OwnerModule),
     //canActivateChild: [ AuthService ]
   },

@@ -66,13 +66,12 @@ profileRouter.post('/create',(req,res)=>{
     console.log(params);
     
     insertIntoProfile([params]).then(result=>{
-        res.status(200).json(result);
+        console.log(JSON.stringify(result))
+        res.status(201).json({msg:created});
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
     });
-    
-    //res.status(200).json({msg:'ok',salt});
 });
 //END user profile api
 
