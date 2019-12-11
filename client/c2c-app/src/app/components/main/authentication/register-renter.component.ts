@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfilesService } from 'src/app/services/profiles.service';
 import { profile } from 'src/app/models/profile';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-register-renter',
@@ -9,20 +10,39 @@ import { profile } from 'src/app/models/profile';
 })
 export class RegisterRenterComponent implements OnInit {
 
-  constructor(private profileSrv:ProfilesService) { }
+  constructor(private profileSrv:ProfilesService,private fb:FormBuilder) { }
+
+  registerRenterForm = this.fb.group({
+    username:['defaultusername'],
+    password:['tpassword'],
+    confirmPassword:['tpassword'],
+    email:['t@t.com'],
+    contactNo:['84321234'],
+    firstName:['myname'],
+    lastName:[''],
+    address:['']
+  })
 
   ngOnInit() {
   }
 
   createRenterProfile(){
-    const pro : profile = {
-      username:'name',
-      email:'email',
-      password: 'password',
-      status:'AC',
-      type:'R'
+    //console.log(this.registerRenterForm.value);
+    const form = this.registerRenterForm.value;
+    const prof : profile = {
+    username:form['username'],
+    password:form['password'],
+    //confirmPassword:form['confirmPassword'],
+    email:form['email'],
+    contact_no:form['contactNo'],
+    first_name:form['firstName'],
+    last_name:form['lastName'],
+    address:form['address'],
+    status:'AC',
+    type:'R'
     }
-    this.profileSrv.createNewProfile(pro).then(r=>console.log(r)).then(e=>console.log(e))
+    console.log(prof);
+    this.profileSrv.createNewProfile(prof).then(r=>console.log(r)).then(e=>console.log(e))
   }
 
 }

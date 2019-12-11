@@ -1,6 +1,6 @@
 //Loading lib
 const fs = require('fs');
-//const uuid = require('uuid');
+const uuid = require('uuid/v4');
 const path = require('path');
 const aws = require('aws-sdk');
 const mysql = require('mysql');
@@ -61,19 +61,18 @@ app.use(express.json());
 //START user profile api
 profileRouter.post('/create',(req,res)=>{
     //console.log(req.body)
-    const salt = 'abcd';
-    let params = {};
-    params = {...req.body,salt:salt,password:crypto.createHmac('sha512',salt).update(req.body.password).digest('hex')};
+    const salt = uuid().substring(0,4);
+    let params = {...req.body,salt:salt,password:crypto.createHmac('sha512',salt).update(req.body.password).digest('hex')};
     console.log(params);
-    /*
+    
     insertIntoProfile([params]).then(result=>{
         res.status(200).json(result);
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
     });
-    */
-    res.status(200).json({msg:'ok',salt});
+    
+    //res.status(200).json({msg:'ok',salt});
 });
 //END user profile api
 

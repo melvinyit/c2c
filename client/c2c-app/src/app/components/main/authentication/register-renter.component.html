@@ -1,3 +1,15 @@
 <p>register-renter works!123</p>
 
 <button type="button" (click)="createRenterProfile()">TEST create</button> 
+
+<form [formGroup]="registerRenterForm" (ngSubmit)="createRenterProfile()">
+    username:<input type="text" name="username" formControlName="username"/><br/>
+    password:<input type="text" name="password" formControlName="password"/><br/>
+    confirmPassword:<input type="text" name="confirmPassword" formControlName="confirmPassword"/><br/>
+    email:<input type="text" name="email" formControlName="email"/><br/>
+    contactNo:<input type="text" name="contactNo" formControlName="contactNo"/><br/>
+    firstName:<input type="text" name="firstName" formControlName="firstName"/><br/>
+    lastName:<input type="text" name="lastName" formControlName="lastName"/><br/>
+    address:<input type="text" name="address" formControlName="address"/><br/>
+    <button type="submit">Register</button>
+</form>
