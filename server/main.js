@@ -9,8 +9,10 @@ const cors = require('cors');
 const multer = require('multer');
 const MongoClient = require('mongodb').MongoClient;
 const express = require('express');
+const crypto = require("crypto");
 //const passport = require('passport');
 
+//self util
 const sql = require('./util.sql');
 const s3Util = require('./util.bucket');
 const initDb = require('./init.db');
@@ -39,7 +41,7 @@ const mUpload = multer({ dest: path.join(__dirname,'/tmp' )});
 const app = express();
 const carRouter = express.Router();
 const bookRouter = express.Router();
-const userRouter = express.Router();
+const profileRouter = express.Router();
 
 //MYSQL DB area
 const CREATEPROFILE = 'INSERT INTO `profile` SET ?';
@@ -56,18 +58,24 @@ app.use(morgan('tiny'));
 
 app.use(express.json());
 
-//START user api
-userRouter.post('/create',(req,res)=>{
-    const params = {};
+//START user profile api
+profileRouter.post('/create',(req,res)=>{
+    //console.log(req.body)
+    const salt = 'abcd';
+    let params = {};
+    params = {...req.body,salt:salt,password:crypto.createHmac('sha512',salt).update(req.body.password).digest('hex')};
+    console.log(params);
+    /*
     insertIntoProfile([params]).then(result=>{
         res.status(200).json(result);
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
     });
-    //res.status(200).json({msg:'ok'});
+    */
+    res.status(200).json({msg:'ok',salt});
 });
-//END user api
+//END user profile api
 
 //START car api
 carRouter.use('/reserve/test',(req,res)=>{
@@ -99,7 +107,7 @@ carRouter.get('/list',(req,res)=>{
 
 //binding router
 app.use('/api/car',carRouter);
-app.use('/api/user',userRouter);
+app.use('/api/profile',profileRouter);
 app.use((req,res)=>{
 	res.status(400).json({msg:'Bad Request'});
 });
