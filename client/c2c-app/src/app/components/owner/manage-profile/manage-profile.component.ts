@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProfilesService } from 'src/app/services/profiles.service';
 
 @Component({
   selector: 'app-manage-profile',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageProfileComponent implements OnInit {
 
-  constructor() { }
+  constructor(private profSrv:ProfilesService) { }
 
   ngOnInit() {
+    this.profSrv.getProfileByToken().then(r=>{
+      console.log(r);
+    }).catch(e=>console.log(e));
   }
 
 }

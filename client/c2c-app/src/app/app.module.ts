@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +20,8 @@ import { RegisterOwnerComponent } from './components/main/authentication/registe
 import { RenterModule } from './modules/renter.module';
 import { OwnerModule } from './modules/owner.module';
 import { AdminModule } from './modules/admin.module';
+import { AuthInterceptor } from './services/auth.interceptor';
+import { LogoutComponent } from './components/main/authentication/logout.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { AdminModule } from './modules/admin.module';
     IndividualComponent,
     LoginComponent,
     RegisterRenterComponent,
-    RegisterOwnerComponent
+    RegisterOwnerComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +49,7 @@ import { AdminModule } from './modules/admin.module';
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

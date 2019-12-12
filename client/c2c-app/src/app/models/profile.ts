@@ -4,7 +4,7 @@ export interface profile  {
     username:string,
     status:string,
     type:string,
-    email:string,
+    email?:string,
     password?:string,
     salt?:string,
     otp_secret?:string,
@@ -20,6 +20,15 @@ export interface profile  {
     last_updated_by?:number,
     last_updated_date?:string,
     deleted_by?:number
+};
+
+export interface profileTiny {
+    profile_id:number,
+    username?:string,
+    status?:string,
+    type?:string,
+    jwt_token:string,
+    jwt_exp:number
 };
 
 export let profileStatus = {

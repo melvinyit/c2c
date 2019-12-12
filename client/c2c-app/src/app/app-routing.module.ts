@@ -13,6 +13,9 @@ import { FAQComponent } from './components/main/other/faq.component';
 import { AboutUsComponent } from './components/main/other/about-us.component';
 import { ContactUsComponent } from './components/main/other/contact-us.component';
 import { RenterAuthGuard } from './guards/renter-auth.guard';
+import { LogoutComponent } from './components/main/authentication/logout.component';
+import { OwnerAuthGuard } from './guards/owner-auth.guard';
+import { AdminAuthGuard } from './guards/admin-auth.guard';
 
 
 const routes: Routes = [
@@ -27,6 +30,7 @@ const routes: Routes = [
   {path:'list-cars',component:ListComponent},
   {path:'list-car/:id1',component:IndividualComponent},
   {path:'login',component:LoginComponent},
+  {path:'logout',component:LogoutComponent},
   {path:'register/renter',component:RegisterRenterComponent},
   {path:'register/owner',component:RegisterOwnerComponent},
   {path:'renter',
@@ -35,15 +39,15 @@ const routes: Routes = [
   },
   {path:'owner',
     loadChildren: () => import('./modules/owner.module').then(m => m.OwnerModule),
-    //canActivateChild: [ AuthService ]
+    canActivateChild: [OwnerAuthGuard ]
   },
   {path:'admin',
     loadChildren: () => import('./modules/owner.module').then(m => m.OwnerModule),
-    //canActivateChild: [ AuthService ]
+    canActivateChild: [ AdminAuthGuard ]
   },
   {path:'admin',
     loadChildren: () => import('./modules/admin.module').then(m => m.AdminModule),
-    //canActivateChild: [ AuthService ]
+    canActivateChild: [ AdminAuthGuard ]
   },
   {path:'**',redirectTo:'/',pathMatch:'full'}
 ];
