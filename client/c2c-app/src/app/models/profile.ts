@@ -22,7 +22,7 @@ export interface profile  {
     deleted_by?:number
 };
 
-export interface profileTiny {
+export interface profileAuth {
     profile_id:number,
     username?:string,
     status?:string,
@@ -31,23 +31,23 @@ export interface profileTiny {
     jwt_exp:number
 };
 
-export let profileStatus = {
-    PE:'Pending',
-    AC:'Active',
-    SU:'Suspended',
-    DE:'Deleted',
-    OT:'Others'
+export enum profileStatus {
+    PE='Pending',
+    AC='Active',
+    SU='Suspended',
+    DE='Deleted',
+    OT='Others'
 };
 
-export let profileType = {
-    A:'Admin',
-    R:'Renter',
-    O:'Car Owner',
-    M:'Moderator'
+export enum profileType {
+    A='Admin',
+    R='Renter',
+    O='Car Owner',
+    M='Moderator'
 };
 
 /*
-`profile_id` INT NOT NULL AUTO_INCREMENT,
+  `profile_id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `status` CHAR(2) NOT NULL COMMENT 'PE - Pending, AC - Active,  SU - Suspended, DE - Deleted, OT - Others',
   `type` CHAR(1) NOT NULL COMMENT 'A - admin, R - renter, O - car owner, M - moderator',

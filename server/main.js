@@ -70,11 +70,13 @@ const CREATEPROFILE = 'INSERT INTO `profile` SET ?';
 const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const CREATECARRESERVEDDATE = 'INSERT INTO `reserved` SET ?';
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type FROM `profile` WHERE `username`=?';
+const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
 
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),pool);
 const insertIntoReserved = sql.mkQueryFromPool(sql.mkQuery(CREATECARRESERVEDDATE),pool);
 const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),pool);
+const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
 
 
 
@@ -146,7 +148,16 @@ profileRouter.post('/authProfile',(req,res)=>{
 profileSecureRouter.get('/get',(req,res)=>{
     //console.log('secure get profile token:',req.body);
     console.log('userinfo',req.jwt_params);
-    res.status(200).json(req.jwt_params);
+    selectProfileById([req.jwt_params.data.profile_id]).then(result=>{
+        const profile = {...result[0]};
+        delete profile['password'];
+        delete profile['salt'];
+        return res.status(200).json(profile);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+    
 });
 //END user profile api
 

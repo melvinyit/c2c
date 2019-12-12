@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { profile, profileTiny } from '../models/profile';
+import { profile, profileAuth } from '../models/profile';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class ProfilesService {
   BASEURL = 'http://localhost:3000/api/profile';
   CREATEPROFILE = '/create';
   AUTHPROFILE = '/authProfile';
-  GETPROFILE='/secure/get'
+  GETPROFILE='/secure/get';
 
 
   createNewProfile(p:profile):Promise<any>{
@@ -27,7 +27,7 @@ export class ProfilesService {
   authenticateProfile(username:string,password:string):Promise<any>{
     //TODO: authenticate change to promise
     return new Promise((resolve,reject)=>{
-      this.http.post<profileTiny>(this.BASEURL+this.AUTHPROFILE,{username,password}).toPromise().then(result=>{
+      this.http.post<profileAuth>(this.BASEURL+this.AUTHPROFILE,{username,password}).toPromise().then(result=>{
         //this.role=result.type;
         //this.tokenExpire=result.jwt_exp;
         localStorage.setItem('c2c_token', result.jwt_token);
