@@ -67,14 +67,16 @@ const tokenDecoder = () => {
 
 //MYSQL DB area
 const CREATEPROFILE = 'INSERT INTO `profile` SET ?';
-const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const CREATECARRESERVEDDATE = 'INSERT INTO `reserved` SET ?';
+const CREATECAR = 'INSERT INTO `car` SET ?';
+const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type FROM `profile` WHERE `username`=?';
 const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
 
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
-const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),pool);
 const insertIntoReserved = sql.mkQueryFromPool(sql.mkQuery(CREATECARRESERVEDDATE),pool);
+const insertIntoCar = sql.mkQueryFromPool(sql.mkQuery(CREATECAR),pool);
+const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),pool);
 const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),pool);
 const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
 
@@ -185,12 +187,22 @@ carRouter.get('/list',(req,res)=>{
         res.status(500).json({msg:'database error'});
     });
 });
+
+carSecureRouter.post('/add',(req,res)=>{
+    console.log(req.body);
+    console.log(req.jwt_params);
+    const car = {...req.body,owner_id:req.jwt_params.data.profile_id,images_keys:'[]'};
+    console.log(car);
+    insertIntoCar([car]).then(r=>console.log(r)).catch(e=>console.log(e));
+    res.status(200).json({msg:'test ok'});
+});
 //END car api
 
 //binding router
 app.use('/api/car',carRouter);
 app.use('/api/profile',profileRouter);
 app.use('/api/profile/secure',tokenDecoder(),profileSecureRouter);
+app.use('/api/car/secure',tokenDecoder(),carSecureRouter);
 
 app.use((req,res)=>{
 	res.status(400).json({msg:'Bad Request'});

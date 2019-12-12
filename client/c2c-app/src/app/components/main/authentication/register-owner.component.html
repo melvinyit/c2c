@@ -1,1 +1,13 @@
 <p>register-owner works!11</p>
+
+<form [formGroup]="registerOwnerForm" (ngSubmit)="createOwnerProfile()">
+    username:<input type="text" name="username" formControlName="username"/><br/>
+    password:<input type="text" name="password" formControlName="password"/><br/>
+    confirmPassword:<input type="text" name="confirmPassword" formControlName="confirmPassword"/><br/>
+    email:<input type="text" name="email" formControlName="email"/><br/>
+    contactNo:<input type="text" name="contactNo" formControlName="contactNo"/><br/>
+    firstName:<input type="text" name="firstName" formControlName="firstName"/><br/>
+    lastName:<input type="text" name="lastName" formControlName="lastName"/><br/>
+    address:<input type="text" name="address" formControlName="address"/><br/>
+    <button type="submit">Register</button>
+</form>

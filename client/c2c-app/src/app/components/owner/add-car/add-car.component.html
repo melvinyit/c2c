@@ -1,1 +1,20 @@
 <p>Car Owner add-car works!</p>
+
+<form [formGroup]="carForm" (ngSubmit)="addCar()">
+    vehicle_regis_no:<input type="text" name="vehicle_regis_no" formControlName="vehicle_regis_no"/><br/>
+    rental_rate:<input type="text" name="rental_rate" formControlName="rental_rate"/><br/>
+    country_code:<input type="text" name="country_code" formControlName="country_code"/><br/>
+    city:<input type="text" name="city" formControlName="city"/><br/>
+    year:<input type="text" name="year" formControlName="year"/><br/>
+    maker:<input type="text" name="maker" formControlName="maker"/><br/>
+    model:<input type="text" name="model" formControlName="model"/><br/>
+    trim:<input type="text" name="trim" formControlName="trim"/><br/>
+    features_codes:<input type="text" name="features_codes" formControlName="features_codes"/><br/>
+    description:<input type="text" name="description" formControlName="description"/><br/>
+    faq:<input type="text" name="faq" formControlName="faq"/><br/>
+    extras:<input type="text" name="extras" formControlName="extras"/><br/>
+    ccp_flag:<input type="text" name="ccp_flag" formControlName="ccp_flag"/><br/>
+    cdp_flag:<input type="text" name="cdp_flag" formControlName="cdp_flag"/><br/>
+    <button type="submit">Add</button>
+
+</form>

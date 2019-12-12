@@ -38,12 +38,27 @@ export enum profileStatus {
     DE='Deleted',
     OT='Others'
 };
+//reverse mapping
+export enum profileStatusCode {
+    Pending='PE',
+    Active='AE',
+    Suspended='SU',
+    Deleted='DE',
+    Others='OT'
+};
 
 export enum profileType {
     A='Admin',
     R='Renter',
     O='Car Owner',
-    M='Moderator'
+    M='Moderator',
+};
+//reverse mapping
+export enum profileTypeCode {
+    Admin='A',
+    Renter='R',
+    'Car Owner'='O',
+    Moderator='M'
 };
 
 /*

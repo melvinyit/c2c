@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfilesService } from 'src/app/services/profiles.service';
-import { profile } from 'src/app/models/profile';
+import { profile, profileStatusCode, profileTypeCode } from 'src/app/models/profile';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -38,10 +38,10 @@ export class RegisterRenterComponent implements OnInit {
     first_name:form['firstName'],
     last_name:form['lastName'],
     address:form['address'],
-    status:'AC',
-    type:'R'
-    }
-    console.log(prof);
+    status:profileStatusCode['Active'],
+    type:profileTypeCode['Renter']
+    };
+    //console.log(prof);
     this.profileSrv.createNewProfile(prof).then(r=>console.log(r)).then(e=>console.log(e))
   }
 

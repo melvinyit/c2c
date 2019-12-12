@@ -30,6 +30,15 @@ export interface car {
     deleted_by?:number
 }
 
+export enum carStatus {
+    A='Active',
+    D='Deleted'
+}
+export enum carStatusCode {
+    Active='A',
+    Deleted='D'
+}
+
 export interface car_reserved_date {
     reserved_id?:number,
     car_id?:number,

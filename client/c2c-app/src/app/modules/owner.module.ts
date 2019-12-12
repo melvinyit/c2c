@@ -9,6 +9,7 @@ import { ManageCarComponent } from '../components/owner/manage-car/manage-car.co
 import { ManageProfileComponent } from '../components/owner/manage-profile/manage-profile.component';
 import { OTPComponent } from '../components/owner/otp/otp.component';
 import { RegisterOTPComponent } from '../components/owner/register-otp/register-otp.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -26,6 +27,7 @@ const ROUTES: Routes = [
   declarations: [AddCarComponent,ManageCarComponent,ListBookingComponent,ManageBookingComponent,ManageProfileComponent,OTPComponent,RegisterOTPComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     RouterModule.forChild(ROUTES)
   ],
   exports: [ RouterModule ],
