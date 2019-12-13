@@ -1,1 +1,17 @@
 <p>Car Owner manage-profile works!</p>
+
+<div *ngIf="profile">
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+        <input type="text" formControlName="profile_id" readonly/><br>
+        username:{{profile.username}}<br>
+        urlkey:{{profile.image_key}}<br>
+        <img [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/profile/'+profile.image_key"><br>
+        email:<input type="text" name="email" formControlName="email" value="{{profile.email}}"/><br/>
+        contactNo:<input type="text" name="contactNo" formControlName="contact_no" value="{{profile.contact_no}}"/><br/>
+        firstName:<input type="text" name="firstName" formControlName="first_name" value="{{profile.first_name}}"/><br/>
+        lastName:<input type="text" name="lastName" formControlName="last_name" value="{{profile.last_name}}"/><br/>
+        address:<input type="text" name="address" formControlName="address" value="{{profile.address}}"/><br/>
+        <button type="submit">Update</button>
+        <button type="button" routerLink="/owner/manage-profile-image">Upload Profile Image</button>
+    </form>
+</div>

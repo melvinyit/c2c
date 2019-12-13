@@ -29,9 +29,8 @@ export class ManageProfileImageComponent implements OnInit {
     formData.set('profileImage', this.profileImageFile.nativeElement.files[0]);
     this.profSrv.uploadProfileImage(formData).then(r=>{
       console.log(r);
-      //this.router.navigate(['/renter/manage-profile']);
+      this.router.navigate(['/renter/manage-profile']);
     }).catch(e=>{console.log(e);});
-    
   }
 
 }

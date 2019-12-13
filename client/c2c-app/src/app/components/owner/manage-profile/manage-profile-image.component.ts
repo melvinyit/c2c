@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProfilesService } from 'src/app/services/profiles.service';
 
 @Component({
   selector: 'app-manage-profile-image',
@@ -7,9 +10,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageProfileImageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router:Router,private fb:FormBuilder, private profSrv:ProfilesService) { }
+
+  @ViewChild('profileImageFile', { static: false })
+  profileImageFile: ElementRef;
+
+  uploadImageForm:FormGroup=this.fb.group({
+    //profile_id:[''],
+    profileImage:['',Validators.required]
+  });
 
   ngOnInit() {
+  }
+
+  onUpload(){
+    console.log(this.uploadImageForm.value);
+    const formData = new FormData();
+    formData.set('profileImage', this.profileImageFile.nativeElement.files[0]);
+    this.profSrv.uploadProfileImage(formData).then(r=>{
+      console.log(r);
+      this.router.navigate(['/owner/manage-profile']);
+    }).catch(e=>{console.log(e);});
   }
 
 }

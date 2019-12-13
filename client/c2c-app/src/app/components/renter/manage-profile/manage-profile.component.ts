@@ -9,6 +9,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ManageProfileComponent implements OnInit {
 
+  constructor(private profSrv:ProfilesService,private fb:FormBuilder) { }
+
   profile = null;
   profileForm:FormGroup = this.fb.group({
     profile_id:[''],
@@ -19,11 +21,9 @@ export class ManageProfileComponent implements OnInit {
     address:['']
   });
 
-  constructor(private profSrv:ProfilesService,private fb:FormBuilder) { }
-
   ngOnInit() {
     this.profSrv.getProfileByToken().then(r=>{
-      console.log(r);
+      //console.log(r);
       this.profile = r;
       this.profileForm.controls['profile_id'].setValue(r.profile_id);
     }).catch(e=>console.log(e));

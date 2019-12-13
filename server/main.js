@@ -36,7 +36,8 @@ const s3 = new aws.S3({
 	accessKeyId: dbConf.s3.accessKey,
 	secretAccessKey: dbConf.s3.secret
 });
-const bucketImages = s3Util.bucket(s3,'c2c','images');
+const bucketProfileImages = s3Util.bucket(s3,'c2c','images/profile');
+const bucketCarImages = s3Util.bucket(s3,'c2c','images/car');
 const butketImagesURL = 'https://c2c.sgp1.digitaloceanspaces.com/images/';
 
 const mUpload = multer({ dest: path.join(__dirname,'/tmp' )});
@@ -92,13 +93,16 @@ const selectbookbyid = sql.mkQueryFromPool(sql.mkQuery(GETBOOKDETAILSBYID),pool)
 const updatebookstatusbyid = sql.mkQueryFromPool(sql.mkQuery(UPDATEBOOKSTATUSBYID),pool);
 const updateProfileById = sql.mkQueryFromPool(sql.mkQuery(UPDATEPROFILEBTID),pool);
 
+const UPDATEPROFILEIMAGE = 'update `profile` set `image_key`=? where profile_id=?';
+const updateProfileImageQuery = sql.mkQuery(UPDATEPROFILEIMAGE);
+
+//create book transaction sql
 const CREATERESERVED = 'INSERT INTO `reserved` SET ?';
 const CREATELICENSE = 'INSERT INTO `license` SET ?';
 const CREATEDRIVER = 'INSERT INTO `driver` SET ?';
 const CREATEBOOKDETAILS = 'INSERT INTO `book_details` SET ?';
 const CREATEBOOKDETAILSDRIVER = 'INSERT INTO `book_driver_junction` SET ?';
 const CREATEBOOK = 'INSERT INTO `book` SET ?';
-
 const insertReservedQuery = sql.mkQuery(CREATERESERVED);
 const insertLicenseQuery = sql.mkQuery(CREATELICENSE);
 const insertDriverQuery = sql.mkQuery(CREATEDRIVER);
@@ -209,9 +213,33 @@ profileSecureRouter.put('/update',(req,res)=>{
 
 profileSecureRouter.post('/upload/dp',mUpload.single('profileImage'),s3Util.deleteTmpFile(),(req,res)=>{
     //console.log('req ojb',req.jwt_token);
+    console.log('req ojb',req.jet_params);
     console.log(req.body);
-	console.log(req.file);
-    res.status(200).json({msg:'ok'});
+    console.log(req.file);
+    pool.getConnection((err,conn)=>{
+		if (err) return console.log(err);	
+		(async () =>{
+			const start = await sql.startTransaction(conn);
+			await updateProfileImageQuery({...start,params:[req.file.filename,req.jwt_params.data.profile_id]});
+			await bucketProfileImages(req.file);
+            await sql.commit({...start});
+            conn.release();
+			res.status(200).json({msg:'testing complete'});
+		})().catch(error=>{
+			console.log(error);
+			sql.rollback({...err});
+            conn.release();
+            conn.rollback(err=>{
+                if(err) console.log(err);
+                console.log('rollbacked pending conn release');
+                conn.release();
+            });
+			//console.log('THIS is VERY BAD');
+			res.status(200).json({msg:'err'});
+		});
+	});
+
+    //res.status(200).json({msg:'ok'});
 });
 //END user profile api
 
@@ -310,8 +338,8 @@ bookingSecureRouter.post('/add',(req,res)=>{
             conn.rollback(err=>{
                 if(err) console.log(err);
                 console.log('rollbacked pending conn release');
+                conn.release();
             });
-			conn.release();
 			res.status(200).json({msg:'SQL error',error:err});
 		});
     });
