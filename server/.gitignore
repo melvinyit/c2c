@@ -1,3 +1,4 @@
 node_modules
 conf.sql.js
 .env
+/tmp/*

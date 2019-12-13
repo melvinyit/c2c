@@ -3,3 +3,4 @@ conf.sql.js
 .env
 ca-certificate.crt
 secret.txt
+sampleimage

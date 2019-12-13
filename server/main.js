@@ -77,6 +77,7 @@ const GETBOOKINGBYOWNERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.
 const GETBOOKINGBYRENTERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE b.renter_id=?';
 const GETBOOKDETAILSBYID = 'select * from book where book_id=?';
 const UPDATEBOOKSTATUSBYID = 'update book set status = ? where book_id = ?';
+const UPDATEPROFILEBTID = 'update `profile` set ? where profile_id = ?';
 
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const insertIntoReserved = sql.mkQueryFromPool(sql.mkQuery(CREATECARRESERVEDDATE),pool);
@@ -89,6 +90,7 @@ const selectBookByOwnerId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYOWNERID)
 const selectBookByRenterId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYRENTERID),pool);
 const selectbookbyid = sql.mkQueryFromPool(sql.mkQuery(GETBOOKDETAILSBYID),pool);
 const updatebookstatusbyid = sql.mkQueryFromPool(sql.mkQuery(UPDATEBOOKSTATUSBYID),pool);
+const updateProfileById = sql.mkQueryFromPool(sql.mkQuery(UPDATEPROFILEBTID),pool);
 
 const CREATERESERVED = 'INSERT INTO `reserved` SET ?';
 const CREATELICENSE = 'INSERT INTO `license` SET ?';
@@ -181,6 +183,8 @@ profileSecureRouter.get('/get',(req,res)=>{
         const profile = {...result[0]};
         delete profile['password'];
         delete profile['salt'];
+        delete profile['otp_secret'];
+        delete profile['token_secret'];
         return res.status(200).json(profile);
     }).catch(err=>{
         console.log(err);
@@ -189,11 +193,25 @@ profileSecureRouter.get('/get',(req,res)=>{
 });
 
 profileSecureRouter.put('/update',(req,res)=>{
-
+    console.log(req.body);
+    let params = req.body;
+    const profile_id = params.profile_id;
+    delete params['profile_id'];
+    updateProfileById([params,profile_id]).then(result=>{
+        console.log(JSON.stringify(result));
+        res.status(203).json({msg:'updated'});
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+    //res.status(200).json({msg:'ok'});
 });
 
-profileSecureRouter.post('/upload/dp',mUpload.single('imageName'),(req,res)=>{
-
+profileSecureRouter.post('/upload/dp',mUpload.single('profileImage'),s3Util.deleteTmpFile(),(req,res)=>{
+    //console.log('req ojb',req.jwt_token);
+    console.log(req.body);
+	console.log(req.file);
+    res.status(200).json({msg:'ok'});
 });
 //END user profile api
 

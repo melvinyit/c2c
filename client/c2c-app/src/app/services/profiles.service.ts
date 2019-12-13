@@ -17,11 +17,21 @@ export class ProfilesService {
   CREATEPROFILE = '/create';
   AUTHPROFILE = '/authProfile';
   GETPROFILE='/secure/get';
+  UPDATEPROFILE='/secure/update';
+  UPLOADPROFILEIMAGE='/secure/upload/dp';
 
 
   createNewProfile(p:profile):Promise<any>{
     console.log('calling create new profile');
     return this.http.post(this.BASEURL+this.CREATEPROFILE,p).toPromise();
+  }
+  updateProfile(p:profile):Promise<any>{
+    console.log('update profile',p);
+    return this.http.put(this.BASEURL+this.UPDATEPROFILE,p).toPromise();
+  }
+
+  uploadProfileImage(formData:FormData):Promise<any>{
+    return this.http.post(this.BASEURL+this.UPLOADPROFILEIMAGE,formData).toPromise();
   }
 
   authenticateProfile(username:string,password:string):Promise<any>{
