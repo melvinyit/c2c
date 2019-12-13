@@ -12,6 +12,8 @@ const express = require('express');
 const crypto = require("crypto");
 //const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const otplib = require('otplib');
+const qrcode = require('qrcode');
 
 //database util
 const sql = require('./util.sql');
@@ -19,6 +21,7 @@ const s3Util = require('./util.bucket');
 const initDb = require('./init.db');
 
 //config
+const APPNAME = 'c2c-app';
 const PORT = parseInt(process.argv[2] || process.env.APP_PORT || process.env.PORT) || 3000;
 const SERVER_JWT_SECRET = 'secretkeyforjwtTODO-Generate';
 const dbConf = require('./conf.db');
@@ -71,6 +74,8 @@ const CREATEPROFILE = 'INSERT INTO `profile` SET ?';
 const CREATECAR = 'INSERT INTO `car` SET ?';
 const UPDATEBOOKSTATUSBYID = 'update book set status = ? where book_id = ?';
 const UPDATEPROFILEBTID = 'update `profile` set ? where profile_id = ?';
+const UPDATEPROFILEOTPBYID = 'update `profile` set otp_secret=? where profile_id = ?';
+const GETPROFILEOTPBYID = 'select otp_secret from `profile` where profile_id = ?';
 const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type,otp_secret FROM `profile` WHERE `username`=?';
 const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
@@ -84,6 +89,8 @@ const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const insertIntoCar = sql.mkQueryFromPool(sql.mkQuery(CREATECAR),pool);
 const updatebookstatusbyid = sql.mkQueryFromPool(sql.mkQuery(UPDATEBOOKSTATUSBYID),pool);
 const updateProfileById = sql.mkQueryFromPool(sql.mkQuery(UPDATEPROFILEBTID),pool);
+const updateProfileOTPById = sql.mkQueryFromPool(sql.mkQuery(UPDATEPROFILEOTPBYID),pool);
+const selectProfileOTPById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEOTPBYID),pool);
 const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),pool);
 const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),pool);
 const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
@@ -169,7 +176,7 @@ profileRouter.post('/authProfile',(req,res)=>{
                 switch(profile.type){
                     case 'A':
                     case 'O':
-                        expTime= Math.floor(Date.now() / 1000) + (60*60);
+                        expTime= Math.floor(Date.now() / 1000) + (60*2);
                         break;
                     case 'R':
                         expTime= Math.floor(Date.now() / 1000) + (60*60);
@@ -196,6 +203,58 @@ profileRouter.post('/authProfile',(req,res)=>{
         res.status(500).json({msg:'database error'});
     });
 });
+
+profileSecureRouter.get('/register/otp',(req,res)=>{
+    const secret = otplib.authenticator.generateSecret();
+    console.log(secret);
+    const otpauth = otplib.authenticator.keyuri(req.jwt_params.data.profile_id, APPNAME, secret);
+    //console.info('otpauth: ', otpauth)
+    qrcode.toDataURL(otpauth, 
+        (err, imgSrc) => {
+            if(err) {
+                console.info('error: ', error);
+                return res.status(500).json({msg:'qr error'});
+            }
+            updateProfileOTPById([secret,req.jwt_params.data.profile_id]).then(r=>{
+                res.status(200).json({msg:'ok',imgSrc});
+            }).catch(err=>{
+                console.log(err);
+                res.status(500).json({msg:'database error'});
+            });
+        }
+    )
+});
+
+
+profileSecureRouter.post('/auth/otp',(req,res)=>{
+        console.log('auth-otp:',req.body.code);
+        selectProfileOTPById([req.jwt_params.data.profile_id]).then(r=>{
+            const otp_secret = r[0].otp_secret;
+            const profile = req.jwt_params.data;
+            const expTime = Math.floor(Date.now() / 1000) + (60*60);
+            //const token = otplib.authenticator.generate(r[0].otp_secret);
+            try {
+                const isValid = otplib.authenticator.check(req.body.code,otp_secret);
+                console.log('validity:',isValid);
+                if(isValid){
+                    const jwt_token=jwt.sign({
+                        //iat: Math.floor(Date.now() / 1000),
+                        exp: expTime,
+                        data: {...profile,otp_auth:true}
+                      }, SERVER_JWT_SECRET);
+                    return res.status(200).json({...profile,jwt_token:jwt_token,jwt_exp:expTime,otp_auth:'true'});
+                }
+                res.status(404).json({msg:'otp fail'});
+            } catch (err) {
+                console.error(err);
+                res.status(404).json({msg:'otp fail'});
+            }
+        }).catch(err=>{
+            console.log(err);
+            res.status(500).json({msg:'database error'});
+        });
+    }
+);
 
 profileSecureRouter.get('/get',(req,res)=>{
     //console.log('secure get profile token:',req.body);

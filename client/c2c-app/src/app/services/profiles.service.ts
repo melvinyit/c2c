@@ -19,6 +19,8 @@ export class ProfilesService {
   GETPROFILE='/secure/get';
   UPDATEPROFILE='/secure/update';
   UPLOADPROFILEIMAGE='/secure/upload/dp';
+  OTPREGISTER='/secure/register/otp';
+  OTPAUTH='/secure/auth/otp';
 
 
   createNewProfile(p:profile):Promise<any>{
@@ -59,6 +61,14 @@ export class ProfilesService {
     localStorage.removeItem('c2c_jwt_exp');
     localStorage.removeItem('c2c_otp_auth');
     return true;
+  }
+
+  registerOTPtoken():Promise<any>{
+    return this.http.get(this.BASEURL+this.OTPREGISTER).toPromise();
+  }
+
+  authOTPcode(code:string):Promise<any>{
+    return this.http.post(this.BASEURL+this.OTPAUTH,{code}).toPromise();
   }
 
   getProfileByToken():Promise<any>{

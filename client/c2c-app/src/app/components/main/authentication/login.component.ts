@@ -31,11 +31,11 @@ export class LoginComponent implements OnInit {
             break;
           case 'O':
             console.log('login owner')
-            this.router.navigate(['owner/manage-profile']);
+            this.router.navigate(['owner/auth-otp']);
             break;
           case 'A':
             console.log('login admin')
-            this.router.navigate(['admin/manage-profile']);
+            this.router.navigate(['admin/auth-otp']);
             break;
           default:
             console.log('default area')

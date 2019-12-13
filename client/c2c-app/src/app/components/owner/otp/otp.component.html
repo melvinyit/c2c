@@ -1,1 +1,9 @@
 <p>Car Owner auth otp works!</p>
+
+<form [formGroup]="otpForm" (ngSubmit)="authOTP()">
+    <input type="text" formControlName="code">
+    <button type="submit">Login</button>
+</form>
+<hr>
+<button type="button" routerLink="/owner/register-otp">register new otp</button>
+
