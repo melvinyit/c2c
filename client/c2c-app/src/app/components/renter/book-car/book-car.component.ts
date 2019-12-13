@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CarService } from 'src/app/services/car.service';
 import { car } from 'src/app/models/car';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { typeWithParameters } from '@angular/compiler/src/render3/util';
-import { book } from 'src/app/models/booking';
+import { book, bookStatusCode } from 'src/app/models/booking';
 import { BookService } from 'src/app/services/book.service';
 
 @Component({
@@ -17,13 +16,18 @@ export class BookCarComponent implements OnInit {
   constructor(private ar:ActivatedRoute,private carSrv:CarService,private bookSrv:BookService,private fb:FormBuilder) { }
   car:car = null;
   bookingForm:FormGroup=this.fb.group({
-    date_from:['120918'],
-    date_to:['120919'],
     car_id:[''],
-    collection_point_id:['1'],
-    dropoff_point_id:['1'],
-    reason:[''],
-    comments:[''],
+    reserved:this.fb.group({
+      date_from:['120918'],
+      date_to:['120919'],
+      car_id:['']
+    }),
+    book_details:this.fb.group({
+      collection_point_id:['1'],
+      dropoff_point_id:['1'],
+      reason:['TR'],
+      comments:['']
+    }),
     drivers:this.fb.array([])
   });
   driverFormArray:FormArray;
@@ -59,14 +63,15 @@ export class BookCarComponent implements OnInit {
 
   bookcar(){
     //console.log('bookcar');
-    const booking = this.bookingForm.getRawValue();
+    const booking:book = this.bookingForm.getRawValue();
     /*
     booking.drivers.forEach(driver => {
       //console.log(driver);
       driver.license = {...driver.license};
     });
     */
-
+    booking.status = bookStatusCode.New;
+    booking.reserved.car_id = booking.car_id;
     this.bookSrv.addNewBooking(booking).then(r=>console.log(r)).catch(e=>console.log(e));
   }
 

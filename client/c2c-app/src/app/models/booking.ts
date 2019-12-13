@@ -53,6 +53,23 @@ export interface book_details{
     deleted_by?:number
 }
 
+export enum bookDetailsReason{
+  TR = 'Travel', 
+  WE = 'Wedding', 
+  HO = 'Holiday', 
+  TP = 'Temp Replacement', 
+  EV = 'Events', 
+  OT = 'Others'
+}
+export enum bookDetailsReasonCode{
+  Travel='TR', 
+  Wedding='WE', 
+  Holiday='HO', 
+  'Temp Replacement'='TP', 
+  Events='EV', 
+  Others='OT'
+}
+
 export interface driver {
     driver_id?:number,
     first_name?:string,

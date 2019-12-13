@@ -11,12 +11,16 @@
     <button type="submit" (click)="addMoreDriver()">Add driver</button>
     <form [formGroup]="bookingForm" (ngSubmit)="bookcar()">
         car_id:<input type="text" name="car_id" formControlName="car_id" readonly><br>
-        date_from:<input type="text" name="date_from" formControlName="date_from"><br>
-        date_to:<input type="text" name="date_to" formControlName="date_to"><br>
-        collection_point_id:<input type="text" name="collection_point_id" formControlName="collection_point_id"><br>
-        dropoff_point_id:<input type="text" name="dropoff_point_id" formControlName="dropoff_point_id"><br>
-        reason:<input type="text" name="reason" formControlName="reason"><br>
-        comments:<input type="text" name="comments" formControlName="comments"><br>
+        <div formGroupName="reserved">
+            date_from:<input type="text" name="date_from" formControlName="date_from"><br>
+            date_to:<input type="text" name="date_to" formControlName="date_to"><br>
+        </div>
+        <div formGroupName="book_details">
+            collection_point_id:<input type="text" name="collection_point_id" formControlName="collection_point_id"><br>
+            dropoff_point_id:<input type="text" name="dropoff_point_id" formControlName="dropoff_point_id"><br>
+            reason:<input type="text" name="reason" formControlName="reason"><br>
+            comments:<input type="text" name="comments" formControlName="comments"><br>
+        </div>
         <div formArrayName="drivers">
             <div *ngFor="let driver of driverFormArray.controls" [formGroup]="driver" style="border:1px solid black;padding-top:3px">
                 <div >

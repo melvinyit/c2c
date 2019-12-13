@@ -82,6 +82,24 @@ const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),
 const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
 const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
 
+const CREATERESERVED = 'INSERT INTO `reserved` SET ?';
+const CREATELICENSE = 'INSERT INTO `license` SET ?';
+const CREATEDRIVER = 'INSERT INTO `driver` SET ?';
+const CREATEBOOKDETAILS = 'INSERT INTO `book_details` SET ?';
+const CREATEBOOKDETAILSDRIVER = 'INSERT INTO `book_driver_junction` SET ?';
+const CREATEBOOK = 'INSERT INTO `book` SET ?';
+
+const insertReservedQuery = sql.mkQuery(CREATERESERVED);
+const insertLicenseQuery = sql.mkQuery(CREATELICENSE);
+const insertDriverQuery = sql.mkQuery(CREATEDRIVER);
+const insertBookDetailsQuery = sql.mkQuery(CREATEBOOKDETAILS);
+const insertBookDetailsDrivers = sql.mkQuery(CREATEBOOKDETAILSDRIVER);
+const insertBookQuery = sql.mkQuery(CREATEBOOK);
+
+
+
+
+
 
 
 
@@ -211,10 +229,94 @@ carSecureRouter.post('/add',(req,res)=>{
 //END car api
 
 //START booking api
+/*
+const insertDriverFunction = async (status,driver) =>{
+    try {
+        console.log('dunction insert driver');
+        const resultlicense = await insertLicenseQuery({...status,params:driver.license});
+        console.log(resultlicense.result.insertId);
+        //console.log(driver);
+        const resultdriver = await insertDriverQuery({...status,params:driver});
+        return (resultlicense.result.insertId);
+      }
+      catch(error) {
+        console.error('error111111111111111111');
+        throw 'custom error';
+      }
+};
+*/
+
 bookingSecureRouter.post('/add',(req,res)=>{
     console.log(req.body);
     console.log('resting ',req.body.drivers[0].license);
-    res.status(200).json({msg:'test ok'});
+    console.log(req.jwt_params);
+    pool.getConnection((err,conn)=>{
+        if (err){
+			console.log(err);	
+			return res.status(500).json({msg:'SQL error',error:err});
+		}
+		(async () =>{
+            /*
+const insertReservedQuery = sql.mkQuery(CREATERESERVED);
+const insertLicenseQuery = sql.mkQuery(CREATELICENSE);
+const insertDriverQuery = sql.mkQuery(CREATEDRIVER);
+const insertBookDetailsQuery = sql.mkQuery(CREATEBOOKDETAILS);
+const insertBookDetailsDrivers = sql.mkQuery(CREATEBOOKDETAILSDRIVER);
+const insertBookQuery = sql.mkQuery(CREATEBOOK);
+            */
+            //console.log(req.body.book_details);
+            const start = await sql.startTransaction(conn);
+            //insert reserverd request
+            let insertResult = await insertReservedQuery({...start,params:req.body.reserved});
+            const reservedId = insertResult.result.insertId;
+            insertResult = await insertBookDetailsQuery({...start,params:req.body.book_details});
+            const bookDetailsId = insertResult.result.insertId;
+            //insert driver and their license and join to book details
+            const driverIdArray = [];
+            for (let driver of req.body.drivers){
+                //console.log('index',driver);
+                const resultlicense = await insertLicenseQuery({...start,params:driver.license});
+                console.log('result license',resultlicense.result.insertId);
+                delete driver['license'];
+                driver.license_id = resultlicense.result.insertId;
+                const resultdriver = await insertDriverQuery({...start,params:driver});
+                driverIdArray.push(resultdriver.result.insertId);
+                const junctiontableresult = await insertBookDetailsDrivers({...start,params:{book_details_id:bookDetailsId,driver_id:resultdriver.result.insertId}});
+                //console.log(junctiontableresult.result);
+            }
+            //insert booking record
+            const bookParams = {
+                status:req.body.status,
+                car_id:req.body.car_id,
+                renter_id:req.jwt_params.data.profile_id,
+                reserved_id:reservedId,
+                book_details_id:bookDetailsId
+            };
+            insertResult = await insertBookQuery({...start,params:bookParams});
+            
+            
+            //console.log(insertResult);
+
+
+            console.log('driverIds',driverIdArray);
+            console.log('reservedId',reservedId);
+            console.log('bookDetailsId',bookDetailsId);
+            console.log('final book result',insertResult.result);
+            sql.commit(start);
+			conn.release();
+			res.status(201).json({msg:'book created'});
+		})().catch(error=>{
+			console.log(error);
+            conn.rollback(err=>{
+                if(err) console.log(err);
+                console.log('rollbacked pending conn release');
+            });
+			conn.release();
+			//console.log('THIS is VERY BAD');
+			res.status(200).json({msg:'SQL error',error:err});
+		});
+    });
+    //res.status(200).json({msg:'test ok'});
 });
 
 //END booking api

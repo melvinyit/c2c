@@ -168,7 +168,7 @@ CREATE TABLE `c2cdb`.`driver` (
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NULL,
   `license_id` INT NOT NULL,
-  `insurance_id` INT NOT NULL,
+  `insurance_id` INT NULL,
   `created_by` INT NULL,
   `created_date` BIGINT UNSIGNED NULL,
   `last_updated_by` INT NULL,
