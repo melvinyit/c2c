@@ -23,6 +23,7 @@ export interface car {
     cdp_flag?:string,
     like_count?:number,
     review_count?:number,
+    reserved_dates?:car_reserved_date[],
     created_by?:number,
     created_date?:string,
     last_updated_by?:number,

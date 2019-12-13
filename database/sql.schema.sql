@@ -26,8 +26,7 @@ CREATE TABLE `c2cdb`.`profile` (
   `last_updated_date` BIGINT UNSIGNED NULL,
   `deleted_by` INT NULL,
   PRIMARY KEY (`profile_id`),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  UNIQUE KEY `username_UNIQUE` (`username` ASC) VISIBLE,
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
   INDEX `idx_status` (`status` ASC) INVISIBLE,
   INDEX `idx_type` (`type` ASC) INVISIBLE,
   INDEX `idx_rating` (`rating` ASC) VISIBLE);
@@ -56,7 +55,7 @@ CREATE TABLE `c2cdb`.`car` (
   `rental_rate` INT(4) NOT NULL COMMENT 'SGD / per day ',
   `country_code` CHAR(2) NOT NULL COMMENT 'country code store in mongo db collection (countries)',
   `city` VARCHAR(25) NOT NULL,
-  `images_keys` TINYTEXT NOT NULL COMMENT 'array of images s3 keys (up to 12 photos per car)',
+  `images_keys` TINYTEXT NULL COMMENT 'array of images s3 keys (up to 12 photos per car) delimiter |',
   `year` INT(4) NOT NULL COMMENT 'for car query api',
   `maker` VARCHAR(20) NOT NULL COMMENT 'for car query api',
   `model` VARCHAR(20) NOT NULL COMMENT 'for car query api',
@@ -247,7 +246,7 @@ CREATE TABLE `c2cdb`.`book_details` (
   
 CREATE TABLE `c2cdb`.`book` (
   `book_id` INT NOT NULL AUTO_INCREMENT,
-  `status` VARCHAR(2) NOT NULL COMMENT 'N - new, A - Accepted, R - Reserved, C - Cancelled, X - Rejected, P - Paid, L - On loan, C - Completed, D - Deleted',
+  `status` VARCHAR(2) NOT NULL COMMENT 'N - new, A - Accepted, R - Reserved, C - Cancelled, X - Rejected, P - Paid, L - On loan, O - Completed, D - Deleted',
   `car_id` INT NOT NULL,
   `renter_id` INT NOT NULL,
   `reserved_id` INT NOT NULL,
@@ -333,4 +332,4 @@ CREATE TABLE `c2cdb`.`tag` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
     
-    
+commit;    

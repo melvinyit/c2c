@@ -1,1 +1,36 @@
 <p>renter book-car works!</p>
+
+<div *ngIf="car">
+    {{car.car_id}}
+    <div *ngIf="(car.reserved_dates && car.reserved_dates.length > 0); else emptyReservedDate">
+            {{car.reserved_dates[0]}}
+    </div>
+    <ng-template #emptyReservedDate>
+        <p>empty reserved date array</p>
+    </ng-template>
+    <button type="submit" (click)="addMoreDriver()">Add driver</button>
+    <form [formGroup]="bookingForm" (ngSubmit)="bookcar()">
+        car_id:<input type="text" name="car_id" formControlName="car_id" readonly><br>
+        date_from:<input type="text" name="date_from" formControlName="date_from"><br>
+        date_to:<input type="text" name="date_to" formControlName="date_to"><br>
+        collection_point_id:<input type="text" name="collection_point_id" formControlName="collection_point_id"><br>
+        dropoff_point_id:<input type="text" name="dropoff_point_id" formControlName="dropoff_point_id"><br>
+        reason:<input type="text" name="reason" formControlName="reason"><br>
+        comments:<input type="text" name="comments" formControlName="comments"><br>
+        <div formArrayName="drivers">
+            <div *ngFor="let driver of driverFormArray.controls" [formGroup]="driver" style="border:1px solid black;padding-top:3px">
+                <div >
+                    first_name:<input type="text" name="first_name" formControlName="first_name"><br>
+                    last_name:<input type="text" name="last_name" formControlName="last_name"><br>
+                    <div formGroupName="license">
+                        license_no:<input type="text" name="license_no" formControlName="license_no"><br>
+                        issuer:<input type="text" name="issuer" formControlName="issuer"><br>
+                        issue_country:<input type="text" name="issue_country" formControlName="issue_country"><br>
+                        exp_in_year:<input type="text" name="exp_in_year" formControlName="exp_in_year"><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit">Book</button>
+    </form>
+</div>

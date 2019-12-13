@@ -1,1 +1,7 @@
 <p>list works!</p>
+
+<div *ngFor="let car of listOfCar" (click)="gotoCarDetail(car.car_id)">
+    {{car.car_id}}
+    {{car.vehicle_regis_no}}
+    {{car.rental_rate}}
+</div> 

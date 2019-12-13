@@ -42,10 +42,10 @@ const butketImagesURL = 'https://c2c.sgp1.digitaloceanspaces.com/images/';
 const mUpload = multer({ dest: path.join(__dirname,'/tmp' )});
 const app = express();
 const carRouter = express.Router();
-const bookRouter = express.Router();
+const bookingRouter = express.Router();
 const profileRouter = express.Router();
 const carSecureRouter = express.Router();
-const bookSecureRouter = express.Router();
+const bookingSecureRouter = express.Router();
 const profileSecureRouter = express.Router();
 
 //function/middleware area
@@ -72,6 +72,7 @@ const CREATECAR = 'INSERT INTO `car` SET ?';
 const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type FROM `profile` WHERE `username`=?';
 const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
+const GETCARBYID = 'SELECT * from `car` WHERE `car_id`=?';
 
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const insertIntoReserved = sql.mkQueryFromPool(sql.mkQuery(CREATECARRESERVEDDATE),pool);
@@ -79,6 +80,7 @@ const insertIntoCar = sql.mkQueryFromPool(sql.mkQuery(CREATECAR),pool);
 const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),pool);
 const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),pool);
 const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
+const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
 
 
 
@@ -176,7 +178,7 @@ carRouter.use('/reserve/test',(req,res)=>{
     });
 });
 
-carRouter.get('/list',(req,res)=>{
+carRouter.get('/list/all',(req,res)=>{
     //console.log('ca');
     const limit = 5;
     const offset = 0;
@@ -187,22 +189,44 @@ carRouter.get('/list',(req,res)=>{
         res.status(500).json({msg:'database error'});
     });
 });
+carRouter.get('/get/one/:carid',(req,res)=>{
+    console.log(req.params.carid);
+    selectCarById([req.params.carid]).then(result=>{
+        //console.log(result);
+        res.status(200).json({...result[0]});
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+});
 
 carSecureRouter.post('/add',(req,res)=>{
-    console.log(req.body);
-    console.log(req.jwt_params);
-    const car = {...req.body,owner_id:req.jwt_params.data.profile_id,images_keys:'[]'};
-    console.log(car);
+    //console.log(req.body);
+    //console.log(req.jwt_params);
+    const car = {...req.body,owner_id:req.jwt_params.data.profile_id};
+    //console.log(car);
     insertIntoCar([car]).then(r=>console.log(r)).catch(e=>console.log(e));
     res.status(200).json({msg:'test ok'});
 });
 //END car api
 
+//START booking api
+bookingSecureRouter.post('/add',(req,res)=>{
+    console.log(req.body);
+    console.log('resting ',req.body.drivers[0].license);
+    res.status(200).json({msg:'test ok'});
+});
+
+//END booking api
+
 //binding router
-app.use('/api/car',carRouter);
 app.use('/api/profile',profileRouter);
+app.use('/api/car',carRouter);
+
 app.use('/api/profile/secure',tokenDecoder(),profileSecureRouter);
 app.use('/api/car/secure',tokenDecoder(),carSecureRouter);
+app.use('/api/booking/secure',tokenDecoder(),bookingSecureRouter);
+
 
 app.use((req,res)=>{
 	res.status(400).json({msg:'Bad Request'});

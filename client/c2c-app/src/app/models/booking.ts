@@ -3,15 +3,40 @@ import { profile } from './profile';
 
 export interface book {
     book_id?:number,
+    book_details?:book_details,
     status?:string,
     renter?:profile,
     reserved?:car_reserved_date,
     invoice?:invoice,
+    car_id?:number,
     created_by?:number,
     created_date?:string,
     last_updated_by?:number,
     last_updated_date?:string,
     deleted_by?:number
+}
+
+export enum bookStatus {
+  N='New',
+  A='Accepted',
+  R='Reserved',
+  C='Cancelled',
+  X='Rejected',
+  P='Paid',
+  L='On Loan',
+  O='Completed',
+  D='Deleted'
+}
+export enum bookStatusCode {
+  New='N',
+  Accepted='A',
+  Reserved='R',
+  Cancelled='C',
+  Rejected='X',
+  Paid='P',
+  'On Loan'='L',
+  Completed='O',
+  Deleted='D'
 }
 
 export interface book_details{

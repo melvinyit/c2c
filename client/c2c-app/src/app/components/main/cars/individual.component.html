@@ -1,1 +1,17 @@
 <p>individual works!</p>
+
+<div *ngIf="car">
+    {{car.car_id}}
+    {{car.model}}
+
+    <div *ngIf="(car.reserved_dates && car.reserved_dates.length > 0); else emptyReservedDate">
+        {{car.reserved_dates[0]}}
+    </div>
+    <ng-template #emptyReservedDate>
+        <p>empty reserved date array</p>
+    </ng-template>
+
+    <button type="button" routerLink="/renter/book-car/{{car.car_id}}">Book Car</button>
+
+</div>
+

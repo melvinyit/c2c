@@ -5,9 +5,10 @@ import { BookCarComponent } from '../components/renter/book-car/book-car.compone
 import { CheckBookingHistoryComponent } from '../components/renter/check-booking-history/check-booking-history.component';
 import { ManageProfileComponent } from '../components/renter/manage-profile/manage-profile.component';
 import { ManageBookingComponent } from '../components/renter/manage-booking/manage-booking.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const ROUTES: Routes = [
-  { path: 'book-car/:id', component: BookCarComponent },
+  { path: 'book-car/:carid', component: BookCarComponent },
   { path: 'check-booking', component: CheckBookingHistoryComponent },
   { path: 'manage-profile', component: ManageProfileComponent },
   { path: 'manage-booking', component: ManageBookingComponent }
@@ -17,6 +18,7 @@ const ROUTES: Routes = [
   declarations: [BookCarComponent, CheckBookingHistoryComponent,ManageProfileComponent,ManageBookingComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     RouterModule.forChild(ROUTES)
   ],
   exports: [ RouterModule ],
