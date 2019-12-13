@@ -17,7 +17,7 @@ const ROUTES: Routes = [
   { path: 'add-car', component: AddCarComponent },
   { path: 'manage-car', component: ManageCarComponent },
   { path: 'list-booking', component: ListBookingComponent },
-  { path: 'manage-booking', component: ManageBookingComponent },
+  { path: 'manage-booking/:bookid', component: ManageBookingComponent },
   { path: 'manage-profile', component: ManageProfileComponent },
   { path: 'auth-otp', component: OTPComponent },
   { path: 'register-otp', component: RegisterOTPComponent }

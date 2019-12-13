@@ -1,1 +1,5 @@
 <p>Car Owner list-booking works!</p>
+
+<div *ngFor="let book of booklist" style="border:black 1px solid" (click)="gotoManageBook()">
+    {{book.book_id}}
+</div>

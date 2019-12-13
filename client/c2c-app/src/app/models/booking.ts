@@ -16,6 +16,21 @@ export interface book {
     deleted_by?:number
 }
 
+export interface custombooktiny {
+  book_id?:number,
+  renter_id?:number,
+  car_id?:number,
+  book_details_id?:number,
+  reserve_id?:number,
+  status?:string,
+  rental_rate?:number,
+  drivers_no?:number,
+  date_from?:number,
+  date_to?:number,
+  reason?:string
+
+}
+
 export enum bookStatus {
   N='New',
   A='Accepted',
