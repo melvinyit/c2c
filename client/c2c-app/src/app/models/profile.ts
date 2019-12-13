@@ -28,7 +28,8 @@ export interface profileAuth {
     status?:string,
     type?:string,
     jwt_token:string,
-    jwt_exp:number
+    jwt_exp:number,
+    otp_auth:string
 };
 
 export enum profileStatus {

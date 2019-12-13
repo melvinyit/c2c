@@ -42,6 +42,7 @@ export class ProfilesService {
         //this.tokenExpire=result.jwt_exp;
         localStorage.setItem('c2c_token', result.jwt_token);
         localStorage.setItem('c2c_role', result.type);
+        localStorage.setItem('c2c_otp_auth', result.otp_auth);
         localStorage.setItem('c2c_jwt_exp', result.jwt_exp.toString());
         //console.log(this.role);
         return resolve(result);
@@ -56,6 +57,7 @@ export class ProfilesService {
     localStorage.removeItem('c2c_token');
     localStorage.removeItem('c2c_role');
     localStorage.removeItem('c2c_jwt_exp');
+    localStorage.removeItem('c2c_otp_auth');
     return true;
   }
 
