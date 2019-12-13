@@ -22,6 +22,8 @@ import { OwnerModule } from './modules/owner.module';
 import { AdminModule } from './modules/admin.module';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { LogoutComponent } from './components/main/authentication/logout.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialsModule } from './materials.module';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { LogoutComponent } from './components/main/authentication/logout.compone
     OwnerModule,
     AdminModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MaterialsModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
