@@ -69,6 +69,8 @@ const tokenDecoder = () => {
 //MYSQL DB area
 const CREATEPROFILE = 'INSERT INTO `profile` SET ?';
 const CREATECAR = 'INSERT INTO `car` SET ?';
+const UPDATEBOOKSTATUSBYID = 'update book set status = ? where book_id = ?';
+const UPDATEPROFILEBTID = 'update `profile` set ? where profile_id = ?';
 const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type,otp_secret FROM `profile` WHERE `username`=?';
 const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
@@ -76,11 +78,12 @@ const GETCARBYID = 'SELECT * from `car` WHERE `car_id`=?';
 const GETBOOKINGBYOWNERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE c.owner_id=?';
 const GETBOOKINGBYRENTERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE b.renter_id=?';
 const GETBOOKDETAILSBYID = 'select * from book where book_id=?';
-const UPDATEBOOKSTATUSBYID = 'update book set status = ? where book_id = ?';
-const UPDATEPROFILEBTID = 'update `profile` set ? where profile_id = ?';
+const GETCARSBYOWNERID = 'select * from car where owner_id=?';
 
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const insertIntoCar = sql.mkQueryFromPool(sql.mkQuery(CREATECAR),pool);
+const updatebookstatusbyid = sql.mkQueryFromPool(sql.mkQuery(UPDATEBOOKSTATUSBYID),pool);
+const updateProfileById = sql.mkQueryFromPool(sql.mkQuery(UPDATEPROFILEBTID),pool);
 const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),pool);
 const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),pool);
 const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
@@ -88,8 +91,8 @@ const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
 const selectBookByOwnerId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYOWNERID),pool);
 const selectBookByRenterId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYRENTERID),pool);
 const selectbookbyid = sql.mkQueryFromPool(sql.mkQuery(GETBOOKDETAILSBYID),pool);
-const updatebookstatusbyid = sql.mkQueryFromPool(sql.mkQuery(UPDATEBOOKSTATUSBYID),pool);
-const updateProfileById = sql.mkQueryFromPool(sql.mkQuery(UPDATEPROFILEBTID),pool);
+const selectCarByOwnerId = sql.mkQueryFromPool(sql.mkQuery(GETCARSBYOWNERID),pool);
+
 
 const UPDATEPROFILEIMAGE = 'update `profile` set `image_key`=? where profile_id=?';
 const updateProfileImageQuery = sql.mkQuery(UPDATEPROFILEIMAGE);
@@ -283,7 +286,19 @@ carSecureRouter.post('/add',(req,res)=>{
     const car = {...req.body,owner_id:req.jwt_params.data.profile_id};
     //console.log(car);
     insertIntoCar([car]).then(r=>console.log(r)).catch(e=>console.log(e));
-    res.status(200).json({msg:'test ok'});
+    res.status(201).json({msg:'car created'});
+});
+
+carSecureRouter.get('/owner/list',(req,res)=>{
+    console.log(req.jwt_params.data.profile_id);
+    selectCarByOwnerId([req.jwt_params.data.profile_id]).then(r=>{
+        console.log(r);
+        res.status(200).json(r);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+    
 });
 //END car api
 

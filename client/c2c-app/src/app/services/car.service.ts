@@ -11,8 +11,9 @@ export class CarService {
 
   BASEURL = 'http://localhost:3000/api/car';
   ADDCAR='/secure/add';
-  LISTALL='/list/all'
-  GETONECAR='/get/one/'
+  LISTALL='/list/all';
+  GETONECAR='/get/one/';
+  GETCARBYOWNERID='/secure/owner/list';
 
   addCar(car:car):Promise<any>{
     console.log('add car service now');
@@ -23,6 +24,11 @@ export class CarService {
   getListAllCar():Promise<car[]>{
     console.log('find cars');
     return this.http.get<car[]>(this.BASEURL+this.LISTALL).toPromise();
+  }
+
+  getListOwnerCar():Promise<car[]>{
+    console.log('find owner cars');
+    return this.http.get<car[]>(this.BASEURL+this.GETCARBYOWNERID).toPromise();
   }
 
   getCarById(carid:number):Promise<car>{

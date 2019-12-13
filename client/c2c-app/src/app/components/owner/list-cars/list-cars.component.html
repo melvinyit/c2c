@@ -1,0 +1,37 @@
+<p>list-cars works!</p>
+
+<div *ngFor="let car of carlist" (click)="gotoManageCar(car.car_id)" style="border:1px solid black">
+    {{car.car_id}}<br>
+    {{car.vehicle_regis_no}}<br>
+    {{car.rental_rate}}<br>
+    {{car.status}}<br>
+</div>
+
+<!--
+car_id: 10002
+ccp_flag: "N"
+cdp_flag: "N"
+city: ""
+country_code: "SG"
+created_by: null
+created_date: null
+deleted_by: null
+description: "test desc"
+extras: "test extra"
+faq: "test faq"
+features_codes: ""
+images_keys: null
+insurance_id: null
+last_updated_by: null
+last_updated_date: null
+like_count: 0
+maker: "api"
+model: "api"
+owner_id: 10004
+rental_rate: 0
+review_count: 0
+status: "A"
+trim: "api"
+vehicle_regis_no: "SAB1234A"
+year: 1990
+-->
