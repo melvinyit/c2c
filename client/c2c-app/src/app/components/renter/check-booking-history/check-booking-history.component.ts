@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { custombooktiny } from 'src/app/models/booking';
+import { BookService } from 'src/app/services/book.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-check-booking-history',
@@ -7,9 +10,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CheckBookingHistoryComponent implements OnInit {
 
-  constructor() { }
+  constructor(private bookSrv:BookService,private router:Router) { }
+  
+  booklist:custombooktiny[] = [];
 
   ngOnInit() {
+    this.getBookingList();
+  }
+
+  getBookingList(){
+    this.bookSrv.getListBookingForRenter().then(r=>{
+      console.log(r);
+      this.booklist = r;
+    }).catch(e=>console.log(e));
+  }
+
+  gotoManageBook(bookid:number){
+    this.router.navigate(['renter/manage-booking/'+bookid]);
   }
 
 }

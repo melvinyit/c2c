@@ -11,7 +11,7 @@ const ROUTES: Routes = [
   { path: 'book-car/:carid', component: BookCarComponent },
   { path: 'check-booking', component: CheckBookingHistoryComponent },
   { path: 'manage-profile', component: ManageProfileComponent },
-  { path: 'manage-booking', component: ManageBookingComponent }
+  { path: 'manage-booking/:bookid', component: ManageBookingComponent }
 ];
 
 @NgModule({

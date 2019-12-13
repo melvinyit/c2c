@@ -1,1 +1,29 @@
 <p>Car Owner manage-booking works!</p>
+
+<div *ngIf="fullbook">
+{{fullbook.bookid}}<br>
+{{fullbook.status}}
+{{bookStatus[fullbook.status]}}<br>
+
+<button type="button" (click)="changeBookStatus('A')">Accepted</button>
+<button type="button" (click)="changeBookStatus('X')">Rejected</button>
+<button type="button" (click)="changeBookStatus('L')">On Loan</button>
+<button type="button" (click)="changeBookStatus('O')">Completed</button>
+
+<button type="button" (click)="changeBookStatus('N')" disabled=true>New</button>
+<button type="button" (click)="changeBookStatus('C')" disabled=true>Cancalled</button>
+<button type="button" (click)="changeBookStatus('P')" disabled=true>Paid</button>
+<button type="button" (click)="changeBookStatus('D')" disabled=true>Deleted</button>
+
+</div>
+<!--
+  N='New',
+  A='Accepted',
+  R='Reserved',
+  C='Cancelled',
+  X='Rejected',
+  P='Paid',
+  L='On Loan',
+  O='Completed',
+  D='Deleted'
+-->

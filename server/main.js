@@ -73,7 +73,10 @@ const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `pro
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type FROM `profile` WHERE `username`=?';
 const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
 const GETCARBYID = 'SELECT * from `car` WHERE `car_id`=?';
-const GETBOOKINGBYPROFILEID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE c.owner_id=?';
+const GETBOOKINGBYOWNERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE c.owner_id=?';
+const GETBOOKINGBYRENTERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE b.renter_id=?';
+const GETBOOKDETAILSBYID = 'select * from book where book_id=?';
+const UPDATEBOOKSTATUSBYID = 'update book set status = ? where book_id = ?';
 
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const insertIntoReserved = sql.mkQueryFromPool(sql.mkQuery(CREATECARRESERVEDDATE),pool);
@@ -82,7 +85,10 @@ const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),
 const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),pool);
 const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
 const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
-const selectBookByProfileId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYPROFILEID),pool);
+const selectBookByOwnerId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYOWNERID),pool);
+const selectBookByRenterId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYRENTERID),pool);
+const selectbookbyid = sql.mkQueryFromPool(sql.mkQuery(GETBOOKDETAILSBYID),pool);
+const updatebookstatusbyid = sql.mkQueryFromPool(sql.mkQuery(UPDATEBOOKSTATUSBYID),pool);
 
 const CREATERESERVED = 'INSERT INTO `reserved` SET ?';
 const CREATELICENSE = 'INSERT INTO `license` SET ?';
@@ -294,8 +300,39 @@ bookingSecureRouter.post('/add',(req,res)=>{
 });
 
 bookingSecureRouter.get('/list/owner/booking',(req,res)=>{
+    selectBookByOwnerId(req.jwt_params.data.profile_id).then(result=>{
+        //console.log(result);
+        res.status(200).json(result);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+});
 
-    selectBookByProfileId(req.jwt_params.data.profile_id).then(result=>{
+bookingSecureRouter.get('/list/renter/booking',(req,res)=>{
+    selectBookByRenterId(req.jwt_params.data.profile_id).then(result=>{
+        //console.log(result);
+        res.status(200).json(result);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+});
+
+
+bookingSecureRouter.get('/full/booking/:bookid',(req,res)=>{  
+    selectbookbyid(req.params.bookid).then(result=>{
+        //console.log(result);
+        res.status(200).json({...result[0]});
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+});
+
+bookingSecureRouter.put('/update/booking/status',(req,res)=>{
+
+    updatebookstatusbyid([req.body.status,req.body.book_id]).then(result=>{
         //console.log(result);
         res.status(200).json(result);
     }).catch(err=>{

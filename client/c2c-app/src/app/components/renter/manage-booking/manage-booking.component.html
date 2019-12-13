@@ -1,1 +1,18 @@
 <p>renter manage-booking works!</p>
+
+<div *ngIf="fullbook">
+    {{fullbook.bookid}}<br>
+    {{fullbook.status}}
+    {{bookStatus[fullbook.status]}}<br>
+
+    <button type="button" (click)="changeBookStatus('C')">Cancalled</button>
+    <button type="button" (click)="changeBookStatus('P')">Paid</button>
+    
+    <button type="button" (click)="changeBookStatus('A')" disabled=true>Accepted</button>
+    <button type="button" (click)="changeBookStatus('X')" disabled=true>Rejected</button>
+    <button type="button" (click)="changeBookStatus('L')" disabled=true>On Loan</button>
+    <button type="button" (click)="changeBookStatus('O')" disabled=true>Completed</button>
+    <button type="button" (click)="changeBookStatus('N')" disabled=true>New</button>
+    <button type="button" (click)="changeBookStatus('D')" disabled=true>Deleted</button>
+    
+</div>

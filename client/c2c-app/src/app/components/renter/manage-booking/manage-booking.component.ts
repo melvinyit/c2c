@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { bookStatus } from 'src/app/models/booking';
+import { ActivatedRoute } from '@angular/router';
+import { BookService } from 'src/app/services/book.service';
 
 @Component({
   selector: 'app-manage-booking',
@@ -7,9 +10,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageBookingComponent implements OnInit {
 
-  constructor() { }
+  constructor(private ar:ActivatedRoute,private bookSrv:BookService) { }
+
+  fullbook = null;
+  bookStatus = bookStatus;
 
   ngOnInit() {
+    const bookid = this.ar.snapshot.params.bookid;
+    console.log(bookid);
+    this.getBookDetails(bookid);
   }
 
+  getBookDetails(bookid:number){
+    this.bookSrv.getFullBookingForRenter(bookid).then(r=>{
+      console.log(r);
+      this.fullbook = r;
+    }).catch(e=>console.log(e));
+  }
+
+  changeBookStatus(newStatus:string){
+    console.log(newStatus);
+    this.bookSrv.updateBookingStatus(this.fullbook.book_id,newStatus).then(r=>{
+      console.log(r);
+      this.getBookDetails(this.fullbook.book_id);
+    }).catch(e=>console.log(e));
+  }
 }
