@@ -5,7 +5,9 @@
         <input type="text" formControlName="profile_id" readonly/><br>
         username:{{profile.username}}<br>
         urlkey:{{profile.image_key}}<br>
+        <!--
         <img [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/profile/'+profile.image_key"><br>
+        -->
         email:<input type="text" name="email" formControlName="email" value="{{profile.email}}"/><br/>
         contactNo:<input type="text" name="contactNo" formControlName="contact_no" value="{{profile.contact_no}}"/><br/>
         firstName:<input type="text" name="firstName" formControlName="first_name" value="{{profile.first_name}}"/><br/>
