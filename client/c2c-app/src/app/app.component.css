@@ -7,8 +7,12 @@
   
 .bg-image::after {
 content: "";
-background: url(../assets/bgnight1.jpg);
-opacity: 0.2;
+background: url(../assets/bgblue.jpg);
+height: 100%;
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+opacity: 0.3;
 top: 0;
 left: 0;
 bottom: 0;

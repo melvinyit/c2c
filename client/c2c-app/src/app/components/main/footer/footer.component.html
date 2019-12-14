@@ -1,9 +1,14 @@
 <mat-toolbar color="primary" fxLayout="column" fxLayoutAlign="start">
-    <mat-toolbar-row fxLayout="row" fxLayoutAlign="start end">      
-        <a class="morespacebetween" routerLink="/contact-us">Contact Us</a>
-        <a class="morespacebetween" routerLink="/about-us">About Us</a>
-        <a class="morespacebetween" routerLink="/FAQ">FAQ</a>
-        <a class="morespacebetween" routerLink="/TnC">TnC</a>
+    <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">      
+        <div>
+            <a class="morespacebetween" routerLink="/contact-us">Contact Us</a>
+            <a class="morespacebetween" routerLink="/about-us">About Us</a>
+            <a class="morespacebetween" routerLink="/FAQ">FAQ</a>
+            <a class="morespacebetween" routerLink="/TnC">TnC</a>
+        </div>
+        <div>
+            <button mat-button color="accent" type="button" (click)="subscribeToNotifications()">subscribe</button>
+        </div>
     </mat-toolbar-row>
     <mat-toolbar-row>
         <span>All right reserved.</span>
