@@ -59,6 +59,7 @@ export interface book_details{
     collection_point?:location_point,
     dropoff_point?:location_point,
     drivers?:driver[],
+    drivers_no?:number,
     reason?:string,
     comments?:string,
     created_by?:number,

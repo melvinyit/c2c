@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CarService } from 'src/app/services/car.service';
-import { car } from 'src/app/models/car';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { book, bookStatusCode } from 'src/app/models/booking';
+import { car, carStatus } from 'src/app/models/car';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { book, bookStatusCode, bookDetailsReason } from 'src/app/models/booking';
 import { BookService } from 'src/app/services/book.service';
 
 @Component({
@@ -13,28 +13,37 @@ import { BookService } from 'src/app/services/book.service';
 })
 export class BookCarComponent implements OnInit {
 
-  constructor(private ar:ActivatedRoute,private carSrv:CarService,private bookSrv:BookService,private fb:FormBuilder) { }
-  car:car = null;
+  constructor(private ar:ActivatedRoute,private carSrv:CarService,private bookSrv:BookService,private fb:FormBuilder, private router:Router) { }
+  car = null;
+  carStatus=carStatus;
+  bookDetailsReason=bookDetailsReason;
+  reasonlist=[];
   bookingForm:FormGroup=this.fb.group({
     car_id:[''],
     reserved:this.fb.group({
-      date_from:['120918'],
-      date_to:['120919'],
+      date_from:['120918',Validators.required],
+      date_to:['120919',Validators.required],
       car_id:['']
     }),
     book_details:this.fb.group({
-      collection_point_id:['1'],
-      dropoff_point_id:['1'],
-      reason:['TR'],
+      collection_point_id:[1,Validators.required],
+      dropoff_point_id:[1,Validators.required],
+      reason:['TR',Validators.required],
       comments:['']
     }),
-    drivers:this.fb.array([])
+    drivers:this.fb.array([],Validators.required)
   });
   driverFormArray:FormArray;
 
   ngOnInit() {
     const carid=this.ar.snapshot.params['carid'];
     console.log('carid',carid);
+    for(let e in this.bookDetailsReason) {
+      //console.log(e);
+      this.reasonlist.push({code:e,value:this.bookDetailsReason[e]});
+  }
+    //this.reasonlist = this.bookDetailsReason.toString();
+    console.log(this.reasonlist);
     this.getCarDetails(carid);
     this.driverFormArray = this.bookingForm.get('drivers') as FormArray;
     this.bookingForm.controls['car_id'].setValue(carid);
@@ -42,21 +51,25 @@ export class BookCarComponent implements OnInit {
 
   addMoreDriver(){
     const driver = this.fb.group({
-      first_name:['firstn'],
+      first_name:['firstn',Validators.required],
       last_name:['lastn'],
       license:this.fb.group({
-        license_no:['N123456n'],
-        issuer:['LTA'],
-        issue_country:['SG'],
-        exp_in_year:['1']
+        license_no:['N123456n',Validators.required],
+        issuer:['LTA',Validators.required],
+        issue_country:['SG',Validators.required],
+        exp_in_year:['1',Validators.required]
       })
-    })
+    });
     this.driverFormArray.push(driver);
+  }
+  removeDriver(driverindex:number){
+    this.driverFormArray.removeAt(driverindex);
   }
 
   getCarDetails(carid:number) {
     this.carSrv.getCarById(carid).then(r=>{
-      console.log(r);
+      console.log('car details')
+      //console.log(r);
       this.car=r;
     }).catch(e=>console.log(e));
   }
@@ -70,9 +83,14 @@ export class BookCarComponent implements OnInit {
       driver.license = {...driver.license};
     });
     */
+   //console.log(booking);
     booking.status = bookStatusCode.New;
     booking.reserved.car_id = booking.car_id;
-    this.bookSrv.addNewBooking(booking).then(r=>console.log(r)).catch(e=>console.log(e));
+    booking.book_details.drivers_no = this.driverFormArray.length;
+    this.bookSrv.addNewBooking(booking).then(r=>{
+      console.log(r);
+      this.router.navigate(['/display/'+r.msg]);
+    }).catch(e=>console.log(e));
   }
 
 }

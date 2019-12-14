@@ -472,7 +472,7 @@ bookingSecureRouter.post('/add',(req,res)=>{
             //console.log('final book result',insertResult.result);
             sql.commit(start);
 			conn.release();
-			res.status(201).json({msg:'book created'});
+			res.status(201).json({msg:'Your booking is created'});
 		})().catch(error=>{
 			console.log(error);
             conn.rollback(err=>{

@@ -1,16 +1,144 @@
-<p>renter book-car works!</p>
-
 <div *ngIf="car">
-    {{car.car_id}}
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{car.maker}} {{car.model}}</mat-card-title>
+            <mat-card-subtitle>{{car.vehicle_regis_no}}</mat-card-subtitle>
+            <mat-card-subtitle><strong>Status:{{carStatus[car.status]}}</strong></mat-card-subtitle>
+            <mat-card-subtitle>id:{{car.car_id}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+                <div *ngIf="car.images_keyss; else noimage" class=imagecar-wrapper>
+                    <img class="imagecar" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+car.images_keys">
+                </div>
+                <ng-template #noimage><p>no image</p></ng-template>
+        </mat-card-content>
+    </mat-card>
     <div *ngIf="(car.reserved_dates && car.reserved_dates.length > 0); else emptyReservedDate">
-            {{car.reserved_dates[0]}}
+        <h4>Reserved Dated of the Car</h4>
+        <div *ngFor='let rd of car.reserved_dates; let i = index'>
+            index:{{i}} || FROM:{{rd.date_from}} || TO:{{rd.date_to}}<br>
+        </div>
     </div>
     <ng-template #emptyReservedDate>
-        <p>empty reserved date array</p>
-    </ng-template>
-    <button type="submit" (click)="addMoreDriver()">Add driver</button>
+        <p>Car is Fully Avalible</p>
+    </ng-template>    
+    <hr>
+    <form [formGroup]="bookingForm" (ngSubmit)="bookcar()" class="compact" fxLayout="column">
+        <input type="text" name="car_id" formControlName="car_id" readonly><br>
+        <div formGroupName="reserved" fxLayout="row" fxLayoutAlign="start center" >
+            <div>
+                <mat-form-field>
+                    <input placeholder="date_from" formControlName="date_from" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="date_to" formControlName="date_to" matInput type="text"/>
+                </mat-form-field>
+            </div>
+        </div>
+        <div formGroupName="book_details" fxLayout="column" fxLayoutAlign="start" >
+            <div fxLayout="row" fxLayoutAlign="start">
+                <div>
+                    <mat-form-field >
+                        <mat-label>collection_point</mat-label>
+                        <mat-select formControlName="collection_point_id">
+                            <mat-option *ngFor="let lp of car.location_points" [value]="lp.location_point_id">
+                                {{lp.title}} - {{lp.address}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <div>
+                        <mat-form-field >
+                            <mat-label>dropoff_point</mat-label>
+                            <mat-select formControlName="dropoff_point_id">
+                                <mat-option *ngFor="let lp of car.location_points" [value]="lp.location_point_id">
+                                    {{lp.title}} - {{lp.address}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <mat-form-field >
+                    <mat-label>reason of traveling:</mat-label>
+                    <mat-select formControlName="reason">
+                        <mat-option *ngFor="let rl of reasonlist" [value]="rl.code">
+                            {{rl.value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="comments" formControlName="comments" matInput type="text"/>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="button" (click)="addMoreDriver()">Add driver</button>
+            </div>
+        </div>
+        <h3>Drivers</h3>
+        <div formArrayName="drivers">
+            <div *ngFor="let driver of driverFormArray.controls; let i = index" [formGroup]="driver" style="border:1px solid black;padding-top:3px">
+                <div fxLayout="column" fxLayoutAlign="start" >
+                    <div  fxLayout="row" fxLayoutAlign="start center" >
+                        <div>
+                            <mat-form-field>
+                                <input placeholder="driver first_name" formControlName="first_name" matInput type="text"/>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <input placeholder="driver last_name" formControlName="last_name" matInput type="text"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div formGroupName="license" fxLayout="column" fxLayoutAlign="start" >
+                        <div  fxLayout="row" fxLayoutAlign="start center" >
+                            <div>
+                                <mat-form-field>
+                                    <input placeholder="license_no" formControlName="license_no" matInput type="text"/>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input placeholder="exp_in_year" formControlName="exp_in_year" matInput type="text"/>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div  fxLayout="row" fxLayoutAlign="start center" >
+                            <div>
+                                <mat-form-field>
+                                    <input placeholder="issuer" formControlName="issuer" matInput type="text"/>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input placeholder="issue_country" formControlName="issue_country" matInput type="text"/>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <button mat-raised-button color="warn" type="button" (click)="removeDriver(i)">Remove driver</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" [disabled]="this.bookingForm.invalid" type="submit">
+                Book
+            </button>
+        </div>
+    </form>
+
+
+    
+    
+    <!--
     <form [formGroup]="bookingForm" (ngSubmit)="bookcar()">
-        car_id:<input type="text" name="car_id" formControlName="car_id" readonly><br>
         <div formGroupName="reserved">
             date_from:<input type="text" name="date_from" formControlName="date_from"><br>
             date_to:<input type="text" name="date_to" formControlName="date_to"><br>
@@ -37,4 +165,5 @@
         </div>
         <button type="submit">Book</button>
     </form>
+    -->
 </div>
