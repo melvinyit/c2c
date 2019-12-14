@@ -659,10 +659,10 @@ initDb.testSQL(pool).then(()=>initDb.testS3(s3,'c2c')).then(()=>initDb.connectMo
 	console.log('tested DB connection');
 	app.listen(PORT,() => {
             console.info(`Application started on port ${PORT} at ${new Date()}`);
-            console.log(publicVapidKey)
+            //console.log(publicVapidKey)
             //console.log(privateVapidKey)
             //webpush.setVapidDetails('mailto:substance1368@gmail.com', publicVapidKey, privateVapidKey);
-            console.log('resigter webpush');
+            //console.log('resigter webpush');
 	});
 }).catch((err)=>{console.log(err);process.exit(0)});
 
