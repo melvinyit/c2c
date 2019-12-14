@@ -94,7 +94,7 @@ const selectalllocationpoint = sql.mkQueryFromPool(sql.mkQuery(GETLOCATION_POINT
 //other transaction
 const UPDATEPROFILEIMAGE = 'update `profile` set `image_key`=? where profile_id=?';
 const updateProfileImageQuery = sql.mkQuery(UPDATEPROFILEIMAGE);
-const UPDATECARIMAGE = 'update `car` set `images_keys`=? where profile_id=?';
+const UPDATECARIMAGE = 'update `car` set `images_keys`=? where car_id=?';
 const updateCarImageQuery = sql.mkQuery(UPDATECARIMAGE);
 
 //create book transaction sql
@@ -315,8 +315,8 @@ profileSecureRouter.post('/upload/dp',mUpload.single('profileImage'),s3Util.dele
 			res.status(200).json({msg:'testing complete'});
 		})().catch(error=>{
 			console.log(error);
-			sql.rollback({...err});
-            conn.release();
+			//sql.rollback({...err});
+            //conn.release();
             conn.rollback(err=>{
                 if(err) console.log(err);
                 console.log('rollbacked pending conn release');
@@ -380,15 +380,15 @@ carSecureRouter.post('/upload/car-image',mUpload.single('carImage'),s3Util.delet
 		if (err) return console.log(err);	
 		(async () =>{
 			const start = await sql.startTransaction(conn);
-			await updateCarImageQuery({...start,params:[req.file.filename,req.body.carid]});
+			await updateCarImageQuery({...start,params:[req.file.filename,req.body.car_id]});
 			await bucketCarImages(req.file);
             await sql.commit({...start});
             conn.release();
 			res.status(200).json({msg:'car image updated'});
 		})().catch(error=>{
 			console.log(error);
-			sql.rollback({...err});
-            conn.release();
+			//sql.rollback({...err});
+            //conn.release();
             conn.rollback(err=>{
                 if(err) console.log(err);
                 console.log('rollbacked pending conn release');

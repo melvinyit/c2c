@@ -1,11 +1,89 @@
-<p>Car Owner manage-car works!</p>
+
 
 <div *ngIf="car">
-    {{car.car_id}}<br>
-    {{car.owner_id}}<br>
-    {{car.year}}<br>
-    {{car.status}}<br>
-    {{car.country_code}}<br>
-    {{car.images_keys}}<br>
-    {{car.faq}}<br>
+    <p>Car Owner manage-car works!</p>
+    <mat-card>
+        <mat-card-header>
+            <div *ngIf="car.images_keys; else noimage" mat-card-avatar>
+                <img class="imagecircleicon" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+car.images_keys">
+            </div>
+            <ng-template #noimage><p>no image</p></ng-template>
+            <mat-card-title>{{car.vehicle_regis_no}}</mat-card-title>
+            <mat-card-subtitle><strong>Status:{{carStatus[car.status]}}</strong></mat-card-subtitle>
+            <mat-card-subtitle>{{car.car_id}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-footer>
+            <button mat-button color="primary" type="button" (click)="gotoUploadImage(car.car_id)">Update Car Image</button>
+        </mat-card-footer>
+    </mat-card>
+    <div>
+        vehicle_regis_no:{{car.vehicle_regis_no}}<br>
+        rental_rate:{{car.rental_rate}}<br>
+        country:{{car.country_code}}<br>
+        city:{{car.city}}<br>
+        year:{{car.year}}<br>
+        maker:{{car.maker}}<br>
+        model:{{car.model}}<br>
+        trim:{{car.trim}}<br>
+        description:{{car.description}}<br>
+        extras:{{car.extras}}<br>
+    </div>
+    <button mat-button color="primary" type="button" (click)="deleteCar(car.car_id)" disabled="true">Delete Car</button>
+    <!-- TODO
+    <form [formGroup]="carForm" (ngSubmit)="updateCar()">
+        <div fxLayout="column" fxLayoutAlign="start">
+            <input type="text" formControlName="car_id" readonly>
+            <div>
+                <mat-form-field>
+                    <input placeholder="rental_rate" formControlName="rental_rate" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="country" formControlName="country_code" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="city" formControlName="city" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="year" formControlName="year" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="maker" formControlName="maker" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="model" formControlName="model" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="trim" formControlName="trim" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="description" formControlName="description" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input placeholder="extras comments" formControlName="extras" matInput type="text"/>
+                </mat-form-field>
+            </div>
+            <div>
+                <button mat-raised-button color="primary" [disabled]="this.carForm.invalid" type="submit">
+                    Update
+                </button>
+            </div>
+        </div>
+    </form>
+    -->
 </div>

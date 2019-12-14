@@ -14,6 +14,7 @@ export class CarService {
   LISTALL='/list/all';
   GETONECAR='/get/one/';
   GETCARBYOWNERID='/secure/owner/list';
+  UPLOADPROFILEIMAGE='/secure/upload/car-image';
 
   addCar(car:car):Promise<any>{
     console.log('add car service now');
@@ -34,6 +35,10 @@ export class CarService {
   getCarById(carid:number):Promise<car>{
     console.log('find cars');
     return this.http.get<car>(this.BASEURL+this.GETONECAR+carid).toPromise();
+  }
+
+  uploadCarImage(formData:FormData):Promise<any>{
+    return this.http.post(this.BASEURL+this.UPLOADPROFILEIMAGE,formData).toPromise();
   }
 
 }

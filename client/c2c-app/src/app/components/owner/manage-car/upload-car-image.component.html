@@ -1,5 +1,5 @@
-<h3>Upload Profile Image</h3>
+<h3>Upload Car Image</h3>
 <form [formGroup]="uploadImageForm">
-    File:<input type="file" formControlName="profileImage" #profileImageFile ><br>
+    File:<input type="file" formControlName="carImage" #carImageFile ><br>
     <button type="button" (click)="onUpload()" [disabled]="this.uploadImageForm.invalid">Upload</button>
 </form>

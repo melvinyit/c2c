@@ -12,13 +12,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .imagecircleicon {
-    width: auto;
     height: 50px;
+    width: auto;
     max-width: 50px;
     border-radius: 50%;
 }
 
-.imagecircleicon {
+.imagecar {
     width: auto;
     height: 150px;
     max-width: 50px;

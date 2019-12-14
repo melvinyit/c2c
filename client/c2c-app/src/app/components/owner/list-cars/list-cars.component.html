@@ -1,10 +1,25 @@
-<p>list-cars works!</p>
-
-<div *ngFor="let car of carlist" (click)="gotoManageCar(car.car_id)" style="border:1px solid black">
-    {{car.car_id}}<br>
-    {{car.vehicle_regis_no}}<br>
-    {{car.rental_rate}}<br>
-    {{car.status}}<br>
+<div *ngIf="listOfCar" fxLayout="column" fxLayoutAlign="start">
+    <mat-card *ngFor="let car of listOfCar" (click)="gotoManageCar(car.car_id)">
+        <mat-card-header>
+            <div *ngIf="car.images_keys; else noimage" mat-card-avatar>
+                <img class="imagecircleicon" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+car.images_keys">
+            </div>
+            <ng-template #noimage><p>no image</p></ng-template>
+            <mat-card-title>{{car.maker}} {{car.model}}</mat-card-title>
+            <mat-card-subtitle><strong>Status:{{carStatus[car.status]}}</strong></mat-card-subtitle>
+            <mat-card-subtitle>{{car.car_id}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <ul>
+                <li>vehicle_regis_no: <b>{{car.vehicle_regis_no}}</b></li>
+                <li>Rental: <b>${{car.rental_rate}} per day</b></li>
+                <li>Car trim detail: <b>{{car.trim}}</b> per day</li>
+            </ul>
+        </mat-card-content>
+        <mat-card-footer>
+            <button mat-button color="primary" type="button" (click)="gotoManageCar(car.car_id)">Manage Car</button>
+        </mat-card-footer>
+    </mat-card>
 </div>
 
 <!--

@@ -1,9 +1,4 @@
 <div *ngIf="listOfCar" fxLayout="column" fxLayoutAlign="start">
-    <div *ngFor="let car of listOfCar" (click)="gotoCarDetail(car.car_id)">
-        {{car.car_id}}
-        {{car.vehicle_regis_no}}
-        {{car.rental_rate}}
-    </div>
     <mat-card *ngFor="let car of listOfCar" (click)="gotoCarDetail(car.car_id)">
         <mat-card-header>
             <div mat-card-avatar >
@@ -22,6 +17,4 @@
             <button type="button" routerLink="/renter/book-car/{{car.car_id}}">Book Car</button>
         </mat-card-footer>
     </mat-card>
-
-
 </div>

@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ManageProfileImageComponent } from '../components/owner/manage-profile/manage-profile-image.component';
 import { ListCarsComponent } from '../components/owner/list-cars/list-cars.component';
 import { MaterialsModule } from '../materials.module';
+import { UploadCarImageComponent } from '../components/owner/manage-car/upload-car-image.component';
 
 
 
@@ -20,6 +21,7 @@ const ROUTES: Routes = [
   { path: 'add-car', component: AddCarComponent },
   { path: 'list-cars', component: ListCarsComponent },
   { path: 'manage-car/:carid', component: ManageCarComponent },
+  { path: 'manage-car-image/:carid', component: UploadCarImageComponent },
   { path: 'list-booking', component: ListBookingComponent },
   { path: 'manage-booking/:bookid', component: ManageBookingComponent },
   { path: 'manage-profile', component: ManageProfileComponent },
@@ -29,7 +31,7 @@ const ROUTES: Routes = [
 ];
 
 @NgModule({
-  declarations: [AddCarComponent,ManageCarComponent,ListBookingComponent,ManageBookingComponent,ManageProfileComponent,OTPComponent,RegisterOTPComponent,ManageProfileImageComponent,ListCarsComponent],
+  declarations: [AddCarComponent,ManageCarComponent,ListBookingComponent,ManageBookingComponent,ManageProfileComponent,OTPComponent,RegisterOTPComponent,ManageProfileImageComponent,ListCarsComponent,UploadCarImageComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
