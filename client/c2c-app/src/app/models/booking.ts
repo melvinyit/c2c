@@ -27,7 +27,10 @@ export interface custombooktiny {
   drivers_no?:number,
   date_from?:number,
   date_to?:number,
-  reason?:string
+  reason?:string,
+  maker?:string,
+  model?:string,
+  images_keys:string
 
 }
 

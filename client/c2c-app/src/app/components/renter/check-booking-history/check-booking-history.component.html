@@ -1,5 +1,23 @@
-<p>renter check-booking-history works!</p>
-
-<div *ngFor="let book of booklist" style="border:black 1px solid" (click)="gotoManageBook(book.book_id)">
-        {{book.book_id}}
-    </div>
+<div *ngIf="booklist" fxLayout="column" fxLayoutAlign="start">
+    <mat-card *ngFor="let book of booklist" (click)="gotoManageBook(book.book_id)">
+        <mat-card-header>
+            <div mat-card-avatar *ngIf="book.images_keys">
+                <img class="imagecircleicon" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+book.images_keys">
+            </div>
+            <mat-card-title>{{book.maker}} {{book.model}} {{book.book_details_id}}</mat-card-title>
+            <mat-card-subtitle>status: <strong>{{bookStatus[book.status]}}</strong></mat-card-subtitle>
+            <mat-card-subtitle><strong>${{book.rental_rate}}</strong> /per day</mat-card-subtitle>
+            
+            <mat-card-subtitle><strong>{{book.car_id}}</strong></mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div>
+                Date from: {{book.date_from}} || Date To:{{book.date_to}}<br>
+                No of driver: {{book.drivers_no}}
+            </div>
+        </mat-card-content>
+        <mat-card-footer>
+            <button mat-button color="primary" type="button" (click)="gotoManageBook(book.book_id)">View Details</button>
+        </mat-card-footer>
+    </mat-card>
+</div>

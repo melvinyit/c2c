@@ -12,7 +12,7 @@ export class ManageBookingComponent implements OnInit {
 
   constructor(private ar:ActivatedRoute,private bookSrv:BookService) { }
 
-  fullbook = null;
+  fb = null;
   bookStatus = bookStatus;
 
   ngOnInit() {
@@ -24,15 +24,15 @@ export class ManageBookingComponent implements OnInit {
   getBookDetails(bookid:number){
     this.bookSrv.getFullBookingForOwner(bookid).then(r=>{
       console.log(r);
-      this.fullbook = r;
+      this.fb = r;
     }).catch(e=>console.log(e));
   }
 
   changeBookStatus(newStatus:string){
     console.log(newStatus);
-    this.bookSrv.updateBookingStatus(this.fullbook.book_id,newStatus).then(r=>{
+    this.bookSrv.updateBookingStatus(this.fb.book_id,newStatus).then(r=>{
       console.log(r);
-      this.getBookDetails(this.fullbook.book_id);
+      this.getBookDetails(this.fb.book_id);
     }).catch(e=>console.log(e));
   }
 

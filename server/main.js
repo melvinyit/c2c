@@ -65,8 +65,8 @@ const GETPROFILEOTPBYID = 'select otp_secret from `profile` where profile_id = ?
 const GETLISTOFCARS = 'SELECT p.username,p.first_name,p.last_name,p.image_key,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type,otp_secret FROM `profile` WHERE `username`=?';
 const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
-const GETBOOKINGBYOWNERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE c.owner_id=?';
-const GETBOOKINGBYRENTERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE b.renter_id=?';
+const GETBOOKINGBYOWNERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to,c.model,c.maker,c.images_keys FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE c.owner_id=?';
+const GETBOOKINGBYRENTERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to,c.model,c.maker,c.images_keys FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE b.renter_id=?';
 const GETBOOKDETAILSBYID = 'select * from book where book_id=?';
 const GETCARSBYOWNERID = 'select * from car where owner_id=?';
 const GETCARBYID = 'SELECT p.first_name,p.last_name,p.email,p.contact_no,p.image_key,c.* from `car` c JOIN `profile` p on p.profile_id=c.owner_id WHERE `car_id`= ?';
@@ -96,6 +96,18 @@ const UPDATEPROFILEIMAGE = 'update `profile` set `image_key`=? where profile_id=
 const updateProfileImageQuery = sql.mkQuery(UPDATEPROFILEIMAGE);
 const UPDATECARIMAGE = 'update `car` set `images_keys`=? where car_id=?';
 const updateCarImageQuery = sql.mkQuery(UPDATECARIMAGE);
+
+//retrive booking 
+const GETBOOKFULLBYID = 'select b.*,bd.*,r.*,p.first_name,p.last_name,p.contact_no,p.email,p.image_key from book b join book_details bd on b.book_details_id=bd.book_details_id join reserved r on r.reserved_id=b.reserved_id join `profile` p on p.profile_id = b.renter_id where b.book_id = ?';
+const GETCARBYBOOKID = 'select c.*,p.first_name,p.last_name,p.contact_no,p.email,p.image_key from book b join car c on c.car_id=b.car_id join `profile` p on p.profile_id = c.owner_id where b.book_id =?';
+const GETCOLLECTIONPOINTBYBOOKID = 'select l.* from book b join book_details bd on b.book_details_id=bd.book_details_id join location_point l on l.location_point_id = bd.collection_point_id where b.book_id = ?';
+const GETDROPOFFPOINTBYBOOKID = 'select l.* from book b join book_details bd on b.book_details_id=bd.book_details_id join location_point l on l.location_point_id = bd.dropoff_point_id where b.book_id = ?';
+const GETDRIVERSBYBOOKID = 'select d.*,l.* from book b join book_details bd on b.book_details_id=bd.book_details_id join book_driver_junction j on bd.book_details_id=j.book_details_id join driver d on d.driver_id=j.driver_id join license l on l.license_id = d.license_id where b.book_id=?';
+const getbook1book = sql.mkQueryFromPool(sql.mkQuery(GETBOOKFULLBYID),pool);
+const getbook2car = sql.mkQueryFromPool(sql.mkQuery(GETCARBYBOOKID),pool);
+const getbook3cp = sql.mkQueryFromPool(sql.mkQuery(GETCOLLECTIONPOINTBYBOOKID),pool);
+const getbook4dp = sql.mkQueryFromPool(sql.mkQuery(GETDROPOFFPOINTBYBOOKID),pool);
+const getbook5driver = sql.mkQueryFromPool(sql.mkQuery(GETDRIVERSBYBOOKID),pool);
 
 //create book transaction sql
 const CREATERESERVED = 'INSERT INTO `reserved` SET ?';
@@ -138,7 +150,6 @@ const tokenDecoder = () => {
 };
 
 const getFullSingleCar = async (carid) => {
-    
     const a = await (async () =>{
         let result;
         let sqlobj = await selectCarById([carid]);
@@ -170,7 +181,34 @@ const getFullSingleCar = async (carid) => {
     return a;
 }
 
-
+const getFullSingleBooking = async (bookid) => {
+    return await (async () =>{
+        let result;
+        let sqlobj = await getbook1book([bookid]);
+        result = {...sqlobj[0]};
+        sqlobj = await getbook2car([bookid]);
+        result.car = {...sqlobj[0]};
+        sqlobj = await getbook3cp([bookid]);
+        result.collection_point = {...sqlobj[0]};
+        sqlobj = await getbook4dp([bookid]);
+        result.dropoff_point = {...sqlobj[0]};
+        sqlobj = await getbook5driver([bookid]);
+        result.drivers = []
+        sqlobj.forEach(e => {
+            result.drivers.push({...e})
+        });
+        console.log(result);
+        return result;
+    })().catch(error=>{
+        console.log(error);
+        conn.rollback(err=>{
+            if(err) console.log(err);
+            console.log('rollbacked pending conn release');
+            conn.release();
+        });
+        return {err:'fail to retrive full single car'};
+    });
+};
 
 
 
@@ -506,9 +544,10 @@ bookingSecureRouter.get('/list/renter/booking',(req,res)=>{
 });
 
 bookingSecureRouter.get('/full/booking/:bookid',(req,res)=>{  
-    selectbookbyid(req.params.bookid).then(result=>{
+    getFullSingleBooking(req.params.bookid).then(result=>{
         //console.log(result);
-        res.status(200).json({...result[0]});
+        //console.log(getFullSingleBooking(req.params.bookid));
+        res.status(200).json(result);
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});

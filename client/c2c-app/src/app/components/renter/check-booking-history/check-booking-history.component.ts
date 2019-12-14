@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { custombooktiny } from 'src/app/models/booking';
+import { custombooktiny, bookStatus } from 'src/app/models/booking';
 import { BookService } from 'src/app/services/book.service';
 import { Router } from '@angular/router';
 
@@ -13,6 +13,7 @@ export class CheckBookingHistoryComponent implements OnInit {
   constructor(private bookSrv:BookService,private router:Router) { }
   
   booklist:custombooktiny[] = [];
+  bookStatus=bookStatus;
 
   ngOnInit() {
     this.getBookingList();

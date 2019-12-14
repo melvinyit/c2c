@@ -13,6 +13,7 @@ export class ListBookingComponent implements OnInit {
   constructor(private bookSrv:BookService,private router:Router) { }
   
   booklist:custombooktiny[] = [];
+  bookStatus=bookStatus;
 
   ngOnInit() {
     this.getBookingList();
@@ -21,7 +22,7 @@ export class ListBookingComponent implements OnInit {
   getBookingList(){
     this.bookSrv.getListBookingForOwner().then(r=>{
       console.log(r);
-      
+
       this.booklist = r;
     }).catch(e=>console.log(e));
   }

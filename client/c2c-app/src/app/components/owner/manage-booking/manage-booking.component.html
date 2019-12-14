@@ -1,29 +1,129 @@
-<p>Car Owner manage-booking works!</p>
+<div *ngIf="fb">
+<h3>booking details</h3>
+  Ref No: {{fb.car.maker}} {{fb.car.model}} {{fb.book_details_id}} <br>
+  Status: {{bookStatus[fb.status]}}<br>
+  Date from: {{fb.date_from}} || Date To:{{fb.date_to}}<br>
+  No of driver: {{fb.drivers_no}}<br>
+  Collection Point: {{fb.collection_point.title}} ({{fb.collection_point.address}})<br>
+  DropOff Point: {{fb.dropoff_point.title}} ({{fb.dropoff_point.address}})<br>
+<hr>
+<h3>renter details</h3>
+  Name: {{fb.first_name}} {{fb.last_name}}<br>
+  Email:  {{fb.email}} <br>
+  Contact No: {{fb.contact_no}}<br>
+<hr>
 
-<div *ngIf="fullbook">
-{{fullbook.bookid}}<br>
-{{fullbook.status}}
-{{bookStatus[fullbook.status]}}<br>
+<h3>Car Details</h3>
+  vehicle_regis_no:{{fb.car.vehicle_regis_no}}<br>
+  rental_rate:{{fb.car.rental_rate}}<br>
+  country:{{fb.car.country_code}}<br>
+  city:{{fb.car.city}}<br>
+  year:{{fb.car.year}}<br>
+  maker:{{fb.car.maker}}<br>
+  model:{{fb.car.model}}<br>
+  trim:{{fb.car.trim}}<br>
+  description:{{fb.car.description}}<br>
+  extras:{{fb.car.extras}}<br>
+  like:{{fb.car.like_count}}<br>
+  review count:{{fb.car.review_count}}<br>
+<hr>
+<h3>owner details</h3>
+  Name: {{fb.car.first_name}} {{fb.car.last_name}}<br>
+  Email:  {{fb.car.email}} <br>
+  Contact No: {{fb.car.contact_no}}<br>
+<hr>
+<h3>drivers details</h3>
+  <div *ngFor="let d of fb.drivers">
+    Name: {{d.first_name}} || {{d.last_name}} <br>
+    Issue at {{d.issuer}} by {{d.issue_country}} <br>
+    Driving License No: {{d.license_no}} 
+    Year of exp : {{d.exp_in_year}}
+    <hr>
+  </div>
+<hr>
 
-<button type="button" (click)="changeBookStatus('A')">Accepted</button>
-<button type="button" (click)="changeBookStatus('X')">Rejected</button>
-<button type="button" (click)="changeBookStatus('L')">On Loan</button>
-<button type="button" (click)="changeBookStatus('O')">Completed</button>
+<div>
+  <button type="button" (click)="changeBookStatus('A')">Accepted</button>
+  <button type="button" (click)="changeBookStatus('X')">Rejected</button>
+  <button type="button" (click)="changeBookStatus('L')">On Loan</button>
+  <button type="button" (click)="changeBookStatus('O')">Completed</button>
 
-<button type="button" (click)="changeBookStatus('N')" disabled=true>New</button>
-<button type="button" (click)="changeBookStatus('C')" disabled=true>Cancalled</button>
-<button type="button" (click)="changeBookStatus('P')" disabled=true>Paid</button>
-<button type="button" (click)="changeBookStatus('D')" disabled=true>Deleted</button>
-
+  <button type="button" (click)="changeBookStatus('N')" disabled=true>New</button>
+  <button type="button" (click)="changeBookStatus('C')" disabled=true>Cancalled</button>
+  <button type="button" (click)="changeBookStatus('P')" disabled=true>Paid</button>
+  <button type="button" (click)="changeBookStatus('D')" disabled=true>Deleted</button>
+</div>
 </div>
 <!--
-  N='New',
-  A='Accepted',
-  R='Reserved',
-  C='Cancelled',
-  X='Rejected',
-  P='Paid',
-  L='On Loan',
-  O='Completed',
-  D='Deleted'
+  driver:deleted_by: null
+driver_id: 55
+exp_in_year: 1
+first_name: "firstn"
+insurance_id: null
+issue_country: "SG"
+issuer: "LTA"
+last_name: "lastn"
+last_updated_by: null
+last_updated_date: null
+license_back_key: null
+license_front_key: null
+license_id: 80
+license_no: "N123456n"
+car:
+car_id: 10000
+ccp_flag: "N"
+cdp_flag: "N"
+city: "Singapore"
+contact_no: "12345678"
+country_code: "SG"
+created_by: 1
+created_date: 1
+deleted_by: null
+description: null
+email: "test@test.com"
+extras: null
+faq: null
+features_codes: null
+first_name: "test1 name"
+image_key: null
+images_keys: ""
+insurance_id: null
+last_name: null
+last_updated_by: 1
+last_updated_date: 1
+like_count: 0
+maker: "hyndai"
+model: "model"
+owner_id: 10000
+rental_rate: 40
+review_count: 0
+status: "A"
+trim: "trimed data"
+vehicle_regis_no: "SXX1234B"
+year: 1990
+__proto__: Object
+car_id: 10000
+collection_point: {location_point_id: 1, type: "S", title: "Airport", address: "Airport address", rate: 20, …}
+collection_point_id: 1
+comments: ""
+contact_no: "d32e3"
+created_by: null
+created_date: null
+date_from: 120918
+date_to: 120919
+deleted_by: null
+drivers_no: 1
+dropoff_point: {location_point_id: 1, type: "S", title: "Airport", address: "Airport address", rate: 20, …}
+dropoff_point_id: 1
+email: "ewd"
+first_name: "first"
+image_key: "23f2cb3d7cb561c665ca2244afc3aa68"
+invoice_id: null
+last_name: ""
+last_updated_by: null
+last_updated_date: null
+reason: "TR"
+renter_id: 10002
+reserved_id: 40
+status: "N"
 -->

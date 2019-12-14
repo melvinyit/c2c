@@ -1,4 +1,4 @@
-<p>owner manage-profile-image works!</p>
+<p>Update your display picture</p>
 <form [formGroup]="uploadImageForm">
     File:<input type="file" formControlName="profileImage" #profileImageFile ><br>
     <button type="button" (click)="onUpload()" [disabled]="this.uploadImageForm.invalid">Upload</button>

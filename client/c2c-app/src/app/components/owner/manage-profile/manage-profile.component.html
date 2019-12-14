@@ -1,19 +1,51 @@
-<p>Car Owner manage-profile works!</p>
-
 <div *ngIf="profile">
-    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
-        <input type="text" formControlName="profile_id" readonly/><br>
-        username:{{profile.username}}<br>
-        urlkey:{{profile.image_key}}<br>
-        <!--
-        <img [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/profile/'+profile.image_key"><br>
-        -->
-        email:<input type="text" name="email" formControlName="email" value="{{profile.email}}"/><br/>
-        contactNo:<input type="text" name="contactNo" formControlName="contact_no" value="{{profile.contact_no}}"/><br/>
-        firstName:<input type="text" name="firstName" formControlName="first_name" value="{{profile.first_name}}"/><br/>
-        lastName:<input type="text" name="lastName" formControlName="last_name" value="{{profile.last_name}}"/><br/>
-        address:<input type="text" name="address" formControlName="address" value="{{profile.address}}"/><br/>
-        <button type="submit">Update</button>
-        <button type="button" routerLink="/owner/manage-profile-image">Upload Profile Image</button>
-    </form>
-</div>
+    
+        <h3>Update Your Particular Form</h3>
+        <mat-card>
+            <mat-card-header>
+                <div mat-card-avatar >
+                    <img class="imagecircleicon" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/profile/'+profile.image_key">
+                </div>
+                <mat-card-title>{{profile.username}}</mat-card-title>
+                <mat-card-subtitle>{{profile.first_name}} {{profile.last_name}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-footer>
+                    <button mat-button color="primary" type="button" routerLink="/renter/manage-profile-image">Update Profile Image</button>
+                </mat-card-footer>
+        </mat-card>
+        <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+            <input type="hidden" formControlName="profile_id" readonly/><br>
+            <div fxLayout="column" fxLayoutAlign="start">
+                <div>
+                    <mat-form-field>
+                        <input placeholder="email" formControlName="email" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="contact_no" formControlName="contact_no" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="first_name" formControlName="first_name" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="last_name" formControlName="last_name" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="address" formControlName="address" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <button mat-raised-button color="primary" [disabled]="this.profileForm.invalid" type="submit">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
