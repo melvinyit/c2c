@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NewsletterServiceService } from './services/newsletter-service.service';
+import { SwPush } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',

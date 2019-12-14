@@ -1,4 +1,5 @@
 node_modules
 conf.sql.js
+conf.db.js
 .env
 /tmp/*

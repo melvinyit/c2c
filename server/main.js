@@ -14,6 +14,7 @@ const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const otplib = require('otplib');
 const qrcode = require('qrcode');
+const webpush = require('web-push');
 
 //database util
 const sql = require('./util.sql');
@@ -26,6 +27,8 @@ const PORT = parseInt(process.argv[2] || process.env.APP_PORT || process.env.POR
 const SERVER_JWT_SECRET = 'secretkeyforjwtTODO-Generate';
 const dbConf = require('./conf.db');
 dbConf.mysql.ssl = {ca: fs.readFileSync(dbConf.mysql.cacert)};
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY || dbConf.webpush.publicKey;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY  || dbConf.webpush.privateKey;
 
 //sql
 const pool = mysql.createPool(dbConf.mysql);
@@ -575,6 +578,69 @@ bookingSecureRouter.put('/update/booking/status',(req,res)=>{
 });
 //END booking api
 
+//for webpush
+
+app.post('/subscribe', (req, res) => {
+    console.log('sub and push');
+    const subscription = req.body;
+    res.status(201).json({msg: 'Newsletter sent successfully.'});
+    const payload = JSON.stringify({ title: 'test' });
+    console.log(subscription);
+    webpush.sendNotification(subscription, payload).catch(error => {
+      console.error(error.stack);
+      //res.sendStatus(500);
+    });
+  });
+app.post('/send/webpush', (req, res) => {
+    console.log('pushing only');
+    //const subscription = req.body;
+    res.status(201).json({});
+    //retrive all subscriptoin
+    const payload = JSON.stringify({ title: 'test' });
+
+    console.log(subscription);
+
+    webpush.sendNotification(subscription, payload)
+    .then(() => console.log('success push'))
+    .catch(error => {
+        console.error(error.stack);
+    });
+});
+
+/*
+  export function sendNewsletter(req, res) {
+
+    const allSubscriptions = ... get subscriptions from database 
+
+    console.log('Total subscriptions', allSubscriptions.length);
+
+    const notificationPayload = {
+        "notification": {
+            "title": "Angular News",
+            "body": "Newsletter Available!",
+            "icon": "assets/main-page-logo-small-hat.png",
+            "vibrate": [100, 50, 100],
+            "data": {
+                "dateOfArrival": Date.now(),
+                "primaryKey": 1
+            },
+            "actions": [{
+                "action": "explore",
+                "title": "Go to the site"
+            }]
+        }
+    };
+
+    Promise.all(allSubscriptions.map(sub => webpush.sendNotification(
+        sub, JSON.stringify(notificationPayload) )))
+        .then(() => res.status(200).json({message: 'Newsletter sent successfully.'}))
+        .catch(err => {
+            console.error("Error sending notification, reason: ", err);
+            res.sendStatus(500);
+        });
+}
+*/
+  
 //binding router
 app.use('/api/profile',profileRouter);
 app.use('/api/car',carRouter);
@@ -592,7 +658,11 @@ app.use((req,res)=>{
 initDb.testSQL(pool).then(()=>initDb.testS3(s3,'c2c')).then(()=>initDb.connectMongo(client)).then(()=>{
 	console.log('tested DB connection');
 	app.listen(PORT,() => {
-			console.info(`Application started on port ${PORT} at ${new Date()}`);
+            console.info(`Application started on port ${PORT} at ${new Date()}`);
+            console.log(publicVapidKey)
+            //console.log(privateVapidKey)
+            //webpush.setVapidDetails('mailto:substance1368@gmail.com', publicVapidKey, privateVapidKey);
+            console.log('resigter webpush');
 	});
 }).catch((err)=>{console.log(err);process.exit(0)});
 
