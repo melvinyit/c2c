@@ -1,10 +1,30 @@
-<div style="border:black 1px solid">
-    <button type="button" routerLink="/home">Home</button>
-    <p>Header</p>
-    <button type="button" routerLink="/home">Home</button>
-    <button type="button" routerLink="/login">Login</button>
-    <button type="button" routerLink="/register/renter">Register:renter</button>
-    <button type="button" routerLink="/register/owner">Register:Car owner</button>
-    <button type="button" routerLink="/logout">Logout</button>
-</div>
+<mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
+    <div (click)="gotoHome()">
+        <mat-icon>home</mat-icon>
+        <span>Car2Car</span>
+    </div>
+    <div>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item routerLink="/login">
+                <mat-icon color="primary"> lock-open</mat-icon>
+                <span>Login</span>
+            </button>
+            <button mat-menu-item routerLink="/register/renter">
+                <mat-icon color="primary">person</mat-icon>
+                <span>Register as Renter</span>
+            </button>
+            <button mat-menu-item routerLink="/register/owner">
+                <mat-icon color="primary">drive_eta</mat-icon>
+                <span>Register as Car Owner</span>
+            </button>
+            <button mat-menu-item routerLink="/logout">
+                <mat-icon color="primary"> logout</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+    </div>
+</mat-toolbar>
 

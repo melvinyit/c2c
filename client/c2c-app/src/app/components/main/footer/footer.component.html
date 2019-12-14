@@ -1,7 +1,13 @@
-<div style="border:black 1px solid">
-    <p>FOOTER</p>
-    <button type="button" routerLink="/contact-us">contact-us</button>
-    <button type="button" routerLink="/about-us">About Us</button>
-    <button type="button" routerLink="/FAQ">FAQ</button>
-    <button type="button" routerLink="/TnC">TnC</button>
-</div>
+
+
+<mat-toolbar color="primary" fxLayout="column" fxLayoutAlign="start">
+    <ul>
+        <li class="nospacebetween"><a class="nospacebetween" routerLink="/contact-us">Contact Us</a></li>
+        <li class="nospacebetween"><a class="nospacebetween" routerLink="/about-us">About Us</a></li>
+        <li class="nospacebetween"><a class="nospacebetween" routerLink="/FAQ">FAQ</a></li>
+        <li class="nospacebetween"><a class="nospacebetween" routerLink="/TnC">TnC</a></li>
+    </ul>
+    <mat-toolbar-row>
+        <span>All right reserved.</span>
+    </mat-toolbar-row>
+</mat-toolbar>

@@ -1,0 +1,32 @@
+.nospacebetween{
+    padding:0;
+    margin:0;
+}
+
+span {
+    font-size: 0.8em;
+}
+
+ul {
+    list-style-type:none;
+    font-size: 0.7em;
+}
+
+a:link {
+    color: white;
+  }
+  
+  /* visited link */
+  a:visited {
+    color: white;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: red;
+  }
+  
+  /* selected link */
+  a:active {
+    color: red;
+  }

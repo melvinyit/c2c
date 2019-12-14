@@ -24,6 +24,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { LogoutComponent } from './components/main/authentication/logout.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialsModule } from './materials.module';
+import { RoutingpageComponent } from './components/test/routingpage.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MaterialsModule } from './materials.module';
     LoginComponent,
     RegisterRenterComponent,
     RegisterOwnerComponent,
-    LogoutComponent
+    LogoutComponent,
+    RoutingpageComponent
   ],
   imports: [
     BrowserModule,
