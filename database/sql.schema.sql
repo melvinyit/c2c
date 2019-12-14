@@ -128,6 +128,7 @@ CREATE TABLE `c2cdb`.`location_point` (
   
 ALTER TABLE `c2cdb`.`location_point` AUTO_INCREMENT=1001;
   
+#remove car_location_point_junction (disallow car owner to choose pickup and dropoff point for assessment  
 CREATE TABLE `c2cdb`.`car_location_point_junction` (
   `car_location_point_id` INT NOT NULL AUTO_INCREMENT,
   `car_id` INT NOT NULL,

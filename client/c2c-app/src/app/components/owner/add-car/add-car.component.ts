@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CarService } from 'src/app/services/car.service';
 import { car, carStatusCode } from 'src/app/models/car';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-car',
@@ -10,23 +11,19 @@ import { car, carStatusCode } from 'src/app/models/car';
 })
 export class AddCarComponent implements OnInit {
 
-  constructor(private fb:FormBuilder, private carSrv:CarService) { }
+  constructor(private fb:FormBuilder, private carSrv:CarService, private router:Router) { }
 
   carForm:FormGroup=this.fb.group({
-    vehicle_regis_no:['SAB1234A'],
-    rental_rate:['0'],
-    country_code:['SG'],
+    vehicle_regis_no:['SAB1234A',Validators.required],
+    rental_rate:['0',Validators.required],
+    country_code:['SG',Validators.required],
     city:[''],
-    year:['1990'],
-    maker:['api'],
-    model:['api'],
-    trim:['api'],
-    features_codes:[''],
+    year:['1990',Validators.required],
+    maker:['api',Validators.required],
+    model:['api',Validators.required],
+    trim:['api',Validators.required],
     description:['test desc'],
-    faq:['test faq'],
-    extras:['test extra'],
-    ccp_flag:['N'],
-    cdp_flag:['N']
+    extras:['test extra']
   });
 
 
@@ -35,7 +32,10 @@ export class AddCarComponent implements OnInit {
 
   addCar(){
     const car:car = this.carForm.getRawValue();
-    this.carSrv.addCar({...car,status:carStatusCode.Active});
+    this.carSrv.addCar({...car,status:carStatusCode.Active}).then(r=>{
+      console.log(r);
+      this.router.navigate(['/display/'+r.msg])
+    }).catch(e=>console.log(e));
   }
 
 

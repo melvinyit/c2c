@@ -12,6 +12,7 @@ import { RegisterOTPComponent } from '../components/owner/register-otp/register-
 import { ReactiveFormsModule } from '@angular/forms';
 import { ManageProfileImageComponent } from '../components/owner/manage-profile/manage-profile-image.component';
 import { ListCarsComponent } from '../components/owner/list-cars/list-cars.component';
+import { MaterialsModule } from '../materials.module';
 
 
 
@@ -32,6 +33,7 @@ const ROUTES: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MaterialsModule,
     RouterModule.forChild(ROUTES)
   ],
   exports: [ RouterModule ],

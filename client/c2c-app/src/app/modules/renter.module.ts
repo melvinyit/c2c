@@ -7,6 +7,7 @@ import { ManageProfileComponent } from '../components/renter/manage-profile/mana
 import { ManageBookingComponent } from '../components/renter/manage-booking/manage-booking.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ManageProfileImageComponent } from '../components/renter/manage-profile/manage-profile-image.component';
+import { MaterialsModule } from '../materials.module';
 
 const ROUTES: Routes = [
   { path: 'book-car/:carid', component: BookCarComponent },
@@ -21,6 +22,7 @@ const ROUTES: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MaterialsModule,
     RouterModule.forChild(ROUTES)
   ],
   exports: [ RouterModule ],

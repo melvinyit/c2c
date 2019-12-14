@@ -1,20 +1,65 @@
-<p>Car Owner add-car works!</p>
-
+<h3>Register your car here!</h3>
 <form [formGroup]="carForm" (ngSubmit)="addCar()">
-    vehicle_regis_no:<input type="text" name="vehicle_regis_no" formControlName="vehicle_regis_no"/><br/>
-    rental_rate:<input type="text" name="rental_rate" formControlName="rental_rate"/><br/>
-    country_code:<input type="text" name="country_code" formControlName="country_code"/><br/>
-    city:<input type="text" name="city" formControlName="city"/><br/>
-    year:<input type="text" name="year" formControlName="year"/><br/>
-    maker:<input type="text" name="maker" formControlName="maker"/><br/>
-    model:<input type="text" name="model" formControlName="model"/><br/>
-    trim:<input type="text" name="trim" formControlName="trim"/><br/>
-    features_codes:<input type="text" name="features_codes" formControlName="features_codes"/><br/>
-    description:<input type="text" name="description" formControlName="description"/><br/>
-    faq:<input type="text" name="faq" formControlName="faq"/><br/>
-    extras:<input type="text" name="extras" formControlName="extras"/><br/>
-    ccp_flag:<input type="text" name="ccp_flag" formControlName="ccp_flag"/><br/>
-    cdp_flag:<input type="text" name="cdp_flag" formControlName="cdp_flag"/><br/>
-    <button type="submit">Add</button>
-
+    <div fxLayout="column" fxLayoutAlign="start">
+        <div>
+            <button mat-raised-button color="primary" [disabled]="this.carForm.invalid" type="submit">
+                Add Car
+            </button>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="vehicle_regis_no" formControlName="vehicle_regis_no" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="rental_rate" formControlName="rental_rate" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="country" formControlName="country_code" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="city" formControlName="city" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="year" formControlName="year" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="maker" formControlName="maker" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="model" formControlName="model" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="trim" formControlName="trim" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="description" formControlName="description" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input placeholder="extras comments" formControlName="extras" matInput type="text"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" [disabled]="this.carForm.invalid" type="submit">
+                Add Car
+            </button>
+        </div>
+    </div>
 </form>

@@ -52,20 +52,6 @@ const carSecureRouter = express.Router();
 const bookingSecureRouter = express.Router();
 const profileSecureRouter = express.Router();
 
-//function/middleware area
-const getHashPassword = (password,salt) => {
-    return crypto.createHmac('sha512',salt).update(password).digest('hex');
-} 
-
-const tokenDecoder = () => {
-    //console.log('jwt header jwt token',req.get('Authorization'));
-    return (req,res,next) =>{
-        req.jwt_params = jwt.verify(req.get('Authorization').substring(7),SERVER_JWT_SECRET);
-        next();
-    };
-};
-
-
 
 
 
@@ -76,14 +62,17 @@ const UPDATEBOOKSTATUSBYID = 'update book set status = ? where book_id = ?';
 const UPDATEPROFILEBTID = 'update `profile` set ? where profile_id = ?';
 const UPDATEPROFILEOTPBYID = 'update `profile` set otp_secret=? where profile_id = ?';
 const GETPROFILEOTPBYID = 'select otp_secret from `profile` where profile_id = ?';
-const GETLISTOFCARS = 'SELECT p.username,p.first_name,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
+const GETLISTOFCARS = 'SELECT p.username,p.first_name,p.last_name,p.image_key,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id LIMIT ? OFFSET ?';
 const GETPROFILEFORAUTH = 'SELECT profile_id,username,password,salt,status,type,otp_secret FROM `profile` WHERE `username`=?';
 const GETPROFILEBYID = 'SELECT * from `profile` where `profile_id`=?';
-const GETCARBYID = 'SELECT * from `car` WHERE `car_id`=?';
 const GETBOOKINGBYOWNERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE c.owner_id=?';
 const GETBOOKINGBYRENTERID = 'SELECT b.*,c.rental_rate,bd.drivers_no,bd.reason,r.date_from,r.date_to FROM `book` b JOIN `car` c ON b.car_id=c.car_id JOIN `book_details` bd ON b.book_details_id=bd.book_details_id JOIN `reserved` r ON r.reserved_id=b.reserved_id WHERE b.renter_id=?';
 const GETBOOKDETAILSBYID = 'select * from book where book_id=?';
 const GETCARSBYOWNERID = 'select * from car where owner_id=?';
+const GETCARBYID = 'SELECT p.first_name,p.last_name,p.email,p.contact_no,p.image_key,c.* from `car` c JOIN `profile` p on p.profile_id=c.owner_id WHERE `car_id`= ?';
+const GETRESERVEDBYCARID = 'select * from reserved where car_id = ?'
+const GETLOCATION_POINT = 'select * from location_point';
+
 
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const insertIntoCar = sql.mkQueryFromPool(sql.mkQuery(CREATECAR),pool);
@@ -94,15 +83,19 @@ const selectProfileOTPById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEOTPBYID),
 const selectListCarsPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARS),pool);
 const selectProfileForAuth = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEFORAUTH),pool);
 const selectProfileById = sql.mkQueryFromPool(sql.mkQuery(GETPROFILEBYID),pool);
-const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
 const selectBookByOwnerId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYOWNERID),pool);
 const selectBookByRenterId = sql.mkQueryFromPool(sql.mkQuery(GETBOOKINGBYRENTERID),pool);
 const selectbookbyid = sql.mkQueryFromPool(sql.mkQuery(GETBOOKDETAILSBYID),pool);
 const selectCarByOwnerId = sql.mkQueryFromPool(sql.mkQuery(GETCARSBYOWNERID),pool);
+const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
+const selectreservedBycarId = sql.mkQueryFromPool(sql.mkQuery(GETRESERVEDBYCARID),pool);
+const selectalllocationpoint = sql.mkQueryFromPool(sql.mkQuery(GETLOCATION_POINT),pool);
 
-
+//other transaction
 const UPDATEPROFILEIMAGE = 'update `profile` set `image_key`=? where profile_id=?';
 const updateProfileImageQuery = sql.mkQuery(UPDATEPROFILEIMAGE);
+const UPDATECARIMAGE = 'update `car` set `images_keys`=? where profile_id=?';
+const updateCarImageQuery = sql.mkQuery(UPDATECARIMAGE);
 
 //create book transaction sql
 const CREATERESERVED = 'INSERT INTO `reserved` SET ?';
@@ -131,7 +124,25 @@ const insertBookQuery = sql.mkQuery(CREATEBOOK);
 
 
 
+//function/middleware area
+const getHashPassword = (password,salt) => {
+    return crypto.createHmac('sha512',salt).update(password).digest('hex');
+} 
 
+const tokenDecoder = () => {
+    //console.log('jwt header jwt token',req.get('Authorization'));
+    return (req,res,next) =>{
+        req.jwt_params = jwt.verify(req.get('Authorization').substring(7),SERVER_JWT_SECRET);
+        next();
+    };
+};
+
+const getFullSingleCar = (carid) => {
+    let result;
+
+        
+    return result;
+}
 
 
 
@@ -277,9 +288,11 @@ profileSecureRouter.put('/update',(req,res)=>{
     let params = req.body;
     const profile_id = params.profile_id;
     delete params['profile_id'];
+    //console.log(profile_id);
     updateProfileById([params,profile_id]).then(result=>{
         //console.log(JSON.stringify(result));
-        res.status(203).json({msg:'updated'});
+        console.log(result);
+        res.status(203).json({msg:`Hi ${params.first_name} ${params.last_name}, your profile had been successfully updated`,result});
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
@@ -345,7 +358,7 @@ carSecureRouter.post('/add',(req,res)=>{
     const car = {...req.body,owner_id:req.jwt_params.data.profile_id};
     //console.log(car);
     insertIntoCar([car]).then(r=>console.log(r)).catch(e=>console.log(e));
-    res.status(201).json({msg:'car created'});
+    res.status(201).json({msg:`Your Car (${req.body.vehicle_regis_no}) had been registered`});
 });
 
 carSecureRouter.get('/owner/list',(req,res)=>{
@@ -357,7 +370,33 @@ carSecureRouter.get('/owner/list',(req,res)=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
     });
-    
+});
+
+carSecureRouter.post('/upload/car-image',mUpload.single('carImage'),s3Util.deleteTmpFile(),(req,res)=>{
+    //console.log('req ojb',req.jet_params);
+    console.log(req.body);
+    console.log(req.file);
+    pool.getConnection((err,conn)=>{
+		if (err) return console.log(err);	
+		(async () =>{
+			const start = await sql.startTransaction(conn);
+			await updateCarImageQuery({...start,params:[req.file.filename,req.body.carid]});
+			await bucketCarImages(req.file);
+            await sql.commit({...start});
+            conn.release();
+			res.status(200).json({msg:'car image updated'});
+		})().catch(error=>{
+			console.log(error);
+			sql.rollback({...err});
+            conn.release();
+            conn.rollback(err=>{
+                if(err) console.log(err);
+                console.log('rollbacked pending conn release');
+                conn.release();
+            });
+			res.status(200).json({msg:'err'});
+		});
+	});
 });
 //END car api
 

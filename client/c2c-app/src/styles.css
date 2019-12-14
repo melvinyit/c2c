@@ -10,3 +10,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .msg-text{
     font-size: 1em;
 }
+
+.imagecircleicon {
+    width: auto;
+    height: 50px;
+    max-width: 50px;
+    border-radius: 50%;
+}
+
+.imagecircleicon {
+    width: auto;
+    height: 150px;
+    max-width: 50px;
+    border-radius: 5%;
+}

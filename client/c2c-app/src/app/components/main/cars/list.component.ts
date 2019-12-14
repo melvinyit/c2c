@@ -11,7 +11,7 @@ import { CarService } from 'src/app/services/car.service';
 export class ListComponent implements OnInit {
 
   constructor(private router:Router, private ar:ActivatedRoute, private carSrv:CarService) { }
-  listOfCar:car[]=[]
+  listOfCar=[];
 
   ngOnInit() {
     const path = this.ar.routeConfig.path;

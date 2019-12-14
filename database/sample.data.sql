@@ -13,4 +13,12 @@ INSERT INTO `c2cdb`.`location_point` (`location_point_id`, `type`, `title`, `add
 INSERT INTO `c2cdb`.`location_point` (`location_point_id`, `type`, `title`, `address`, `rate`, `lat`, `long`) VALUES ('2', 'S', 'AMK', 'AMK address', '5', '1.426388', '103.991702');
 INSERT INTO `c2cdb`.`location_point` (`location_point_id`,`type`, `title`, `address`, `rate`, `lat`, `long`) VALUES ('3','S', 'Woodland', 'woodland address', '5', '1.369569', '103.863011');
 
+INSERT INTO `c2cdb`.`car_location_point_junction` (`car_id`, `location_point_id`, `type`) VALUES ('10000', '1', 'C');
+INSERT INTO `c2cdb`.`car_location_point_junction` (`car_id`, `location_point_id`, `type`) VALUES ('10000', '2', 'C');
+INSERT INTO `c2cdb`.`car_location_point_junction` (`car_id`, `location_point_id`, `type`) VALUES ('10000', '3', 'C');
+INSERT INTO `c2cdb`.`car_location_point_junction` (`car_id`, `location_point_id`, `type`) VALUES ('10000', '1', 'D');
+INSERT INTO `c2cdb`.`car_location_point_junction` (`car_id`, `location_point_id`, `type`) VALUES ('10000', '3', 'D');
+INSERT INTO `c2cdb`.`car_location_point_junction` (`car_id`, `location_point_id`, `type`) VALUES ('10001', '1', 'C');
+INSERT INTO `c2cdb`.`car_location_point_junction` (`car_id`, `location_point_id`, `type`) VALUES ('10001', '1', 'D');
+
 commit;
