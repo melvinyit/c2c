@@ -24,6 +24,7 @@ export interface car {
     like_count?:number,
     review_count?:number,
     reserved_dates?:car_reserved_date[],
+    location_points?:location_point[],
     created_by?:number,
     created_date?:string,
     last_updated_by?:number,

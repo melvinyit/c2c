@@ -18,9 +18,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-radius: 50%;
 }
 
+.imagecar-wapper{
+    min-height:150px;
+}
 .imagecar {
     width: auto;
     height: 150px;
-    max-width: 50px;
+    max-width: 300px;
     border-radius: 5%;
+}
+
+.imagecarbig-wapper{
+    min-height:250px;
+    font-size: 10em;
+}
+.imagecarbig {
+    width: auto;
+    height: 250px;
+    max-width: 500px;
+    border-radius: 1%;
 }

@@ -1,7 +1,7 @@
 
 
 <div *ngIf="car">
-    <p>Car Owner manage-car works!</p>
+    <p>Manage Car Page</p>
     <mat-card>
         <mat-card-header>
             <div *ngIf="car.images_keys; else noimage" mat-card-avatar>
@@ -17,6 +17,7 @@
         </mat-card-footer>
     </mat-card>
     <div>
+        <h4>Car Details</h4><br>
         vehicle_regis_no:{{car.vehicle_regis_no}}<br>
         rental_rate:{{car.rental_rate}}<br>
         country:{{car.country_code}}<br>
@@ -27,6 +28,18 @@
         trim:{{car.trim}}<br>
         description:{{car.description}}<br>
         extras:{{car.extras}}<br>
+        like:{{car.like_count}}<br>
+        review count:{{car.review_count}}<br>
+    </div>
+    <hr>
+    <h4>Collection and deletion point</h4>
+    <div *ngFor='let lp of car.location_points; let i = index'>
+        index:{{i}} || Location:{{lp.title}} || Address:{{lp.address}}<br>
+    </div>
+    <hr>
+    <h4>Reserved Dated of the Car</h4>
+    <div *ngFor='let rd of car.reserved_dates; let i = index'>
+        index:{{i}} || FROM:{{rd.date_from}} || TO:{{rd.date_to}}<br>
     </div>
     <button mat-button color="primary" type="button" (click)="deleteCar(car.car_id)" disabled="true">Delete Car</button>
     <!-- TODO

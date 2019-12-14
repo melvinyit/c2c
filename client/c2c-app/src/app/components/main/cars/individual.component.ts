@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CarService } from 'src/app/services/car.service';
-import { car } from 'src/app/models/car';
+import { car, carStatus } from 'src/app/models/car';
 
 @Component({
   selector: 'app-individual',
@@ -12,6 +12,7 @@ export class IndividualComponent implements OnInit {
 
   constructor(private ar:ActivatedRoute,private carSrv:CarService) { }
   car:car=null;
+  carStatus=carStatus;
 
   ngOnInit() {
     const carid=this.ar.snapshot.params['carid'];

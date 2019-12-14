@@ -137,11 +137,37 @@ const tokenDecoder = () => {
     };
 };
 
-const getFullSingleCar = (carid) => {
-    let result;
-
-        
-    return result;
+const getFullSingleCar = async (carid) => {
+    
+    const a = await (async () =>{
+        let result;
+        let sqlobj = await selectCarById([carid]);
+        result = {...sqlobj[0]};
+        sqlobj = await selectreservedBycarId([carid]);
+        result.reserved_dates = [];
+        sqlobj.forEach(e => {
+            //console.log(e);
+            result.reserved_dates.push({...e})
+        });
+        sqlobj = await selectalllocationpoint();
+        result.location_points = [];
+        sqlobj.forEach(e => {
+            //console.log(e);
+            result.location_points.push({...e})
+        });
+        //console.log('inside async',result);
+        return result;
+    })().catch(error=>{
+        console.log(error);
+        conn.rollback(err=>{
+            if(err) console.log(err);
+            console.log('rollbacked pending conn release');
+            conn.release();
+        });
+        return {err:'fail to retrive full single car'};
+    });
+    console.log('a');
+    return a;
 }
 
 
@@ -343,13 +369,14 @@ carRouter.get('/list/all',(req,res)=>{
 });
 carRouter.get('/get/one/:carid',(req,res)=>{
     console.log(req.params.carid);
-    selectCarById([req.params.carid]).then(result=>{
-        //console.log(result);
-        res.status(200).json({...result[0]});
+    getFullSingleCar(req.params.carid).then(result=>{
+        console.log('result in http call',result);
+        res.status(200).json(result);
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
     });
+    //selectCarById([req.params.carid])
 });
 
 carSecureRouter.post('/add',(req,res)=>{

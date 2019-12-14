@@ -1,17 +1,43 @@
-<p>individual works!</p>
-
 <div *ngIf="car">
-    {{car.car_id}}
-    {{car.model}}
-
-    <div *ngIf="(car.reserved_dates && car.reserved_dates.length > 0); else emptyReservedDate">
-        {{car.reserved_dates[0]}}
+    <button mat-raised-button color="primary"type="button" routerLink="/renter/book-car/{{car.car_id}}">Book Car</button>
+    <mat-card>
+        <mat-card-header>
+            <div *ngIf="car.images_keys; else noimage" mat-card-avatar>
+                <img class="imagecircleicon" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+car.images_keys">
+            </div>
+            <ng-template #noimage><p>no image</p></ng-template>
+            <mat-card-title>{{car.vehicle_regis_no}}</mat-card-title>
+            <mat-card-subtitle><strong>Status:{{carStatus[car.status]}}</strong></mat-card-subtitle>
+            <mat-card-subtitle>{{car.car_id}}</mat-card-subtitle>
+        </mat-card-header>
+    </mat-card>
+    <div>
+        <h4>Car Details</h4><br>
+        vehicle_regis_no:{{car.vehicle_regis_no}}<br>
+        rental_rate:{{car.rental_rate}}<br>
+        country:{{car.country_code}}<br>
+        city:{{car.city}}<br>
+        year:{{car.year}}<br>
+        maker:{{car.maker}}<br>
+        model:{{car.model}}<br>
+        trim:{{car.trim}}<br>
+        description:{{car.description}}<br>
+        extras:{{car.extras}}<br>
+        like:{{car.like_count}}<br>
+        review count:{{car.review_count}}<br>
     </div>
-    <ng-template #emptyReservedDate>
-        <p>empty reserved date array</p>
-    </ng-template>
-
-    <button type="button" routerLink="/renter/book-car/{{car.car_id}}">Book Car</button>
-
+    <div *ngIf="car.images_keys; else noimage" class="imagecarbig-wrapper">
+        <img class="imagecarbig" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+car.images_keys">
+    </div>
+    <hr>
+    <h4>Collection and Dropoff point</h4>
+    <div *ngFor='let lp of car.location_points; let i = index'>
+        index:{{i}} || Location:{{lp.title}} || Address:{{lp.address}}<br>
+    </div>
+    <hr>
+    <h4>Reserved Dated of the Car</h4>
+    <div *ngFor='let rd of car.reserved_dates; let i = index'>
+        index:{{i}} || FROM:{{rd.date_from}} || TO:{{rd.date_to}}<br>
+    </div>
+    <button mat-raised-button color="primary"type="button" routerLink="/renter/book-car/{{car.car_id}}">Book Car</button>
 </div>
-

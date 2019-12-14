@@ -1,20 +1,24 @@
 <div *ngIf="listOfCar" fxLayout="column" fxLayoutAlign="start">
     <mat-card *ngFor="let car of listOfCar" (click)="gotoCarDetail(car.car_id)">
         <mat-card-header>
-            <div mat-card-avatar >
-                <img class="imagecircleicon" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+car.image_key">
+            <div mat-card-avatar *ngIf="car.image_key">
+                <img class="imagecircleicon" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/profile/'+car.image_key">
             </div>
+            
             <mat-card-title>{{car.maker}} {{car.model}}</mat-card-title>
             <mat-card-subtitle><strong>${{car.rental_rate}} per day</strong></mat-card-subtitle>
             <mat-card-subtitle>Owner: {{car.first_name}} {{car.last_name}}</mat-card-subtitle>
             <mat-card-subtitle>{{car.car_id}}</mat-card-subtitle>
         </mat-card-header>
-        <mat-card-content>
-                <img class="imagecar" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/car1.jpg'">
+        <mat-card-content class="imagecar-wapper">
+            <div *ngIf="car.images_keys; else noimage" mat-card-avatar>
+                <img class="imagecar" [src]="'https://c2c.sgp1.digitaloceanspaces.com/images/car/'+car.images_keys">
+            </div>
         </mat-card-content>
         <mat-card-footer>
             <button mat-button color="primary" type="button" (click)="gotoCarDetail(car.car_id)">View Details</button>
-            <button type="button" routerLink="/renter/book-car/{{car.car_id}}">Book Car</button>
+            <button mat-raised-button color="primary" type="button" routerLink="/renter/book-car/{{car.car_id}}">Book Car</button>
         </mat-card-footer>
     </mat-card>
 </div>
+<ng-template #noimage><p>no image</p></ng-template>
