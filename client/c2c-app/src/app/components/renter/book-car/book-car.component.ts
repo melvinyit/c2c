@@ -12,6 +12,7 @@ import { BookService } from 'src/app/services/book.service';
   styleUrls: ['./book-car.component.css']
 })
 export class BookCarComponent implements OnInit {
+  //TODO to make date as actual date 
 
   constructor(private ar:ActivatedRoute,private carSrv:CarService,private bookSrv:BookService,private fb:FormBuilder, private router:Router) { }
   car = null;
@@ -21,8 +22,8 @@ export class BookCarComponent implements OnInit {
   bookingForm:FormGroup=this.fb.group({
     car_id:[''],
     reserved:this.fb.group({
-      date_from:['120918',Validators.required],
-      date_to:['120919',Validators.required],
+      date_from:['190912',Validators.required],
+      date_to:['190927',Validators.required],
       car_id:['']
     }),
     book_details:this.fb.group({
@@ -48,6 +49,8 @@ export class BookCarComponent implements OnInit {
     this.driverFormArray = this.bookingForm.get('drivers') as FormArray;
     this.bookingForm.controls['car_id'].setValue(carid);
   }
+
+
 
   addMoreDriver(){
     const driver = this.fb.group({
@@ -87,10 +90,15 @@ export class BookCarComponent implements OnInit {
     booking.status = bookStatusCode.New;
     booking.reserved.car_id = booking.car_id;
     booking.book_details.drivers_no = this.driverFormArray.length;
+    //TODO change it to date, this only can count within a single month
+    booking.book_details.total_days_rented = Math.min(+booking.reserved.date_to - +booking.reserved.date_from,30)||1;
+
+    
     this.bookSrv.addNewBooking(booking).then(r=>{
       console.log(r);
       this.router.navigate(['/display/'+r.msg]);
     }).catch(e=>console.log(e));
+    
   }
 
 }

@@ -64,6 +64,7 @@ export interface book_details{
     drivers?:driver[],
     drivers_no?:number,
     reason?:string,
+    total_days_rented?:number,
     comments?:string,
     created_by?:number,
     created_date?:string,

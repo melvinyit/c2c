@@ -31,6 +31,15 @@
         like:{{car.like_count}}<br>
         review count:{{car.review_count}}<br>
     </div>
+    <div>
+        <h4>Car Earning</h4><br>
+        total_rent:{{car.money.total_rent}}<br>
+        total_days:{{car.money.total_days}}<br>
+        total_dropoff_rate:{{car.money.total_dropoff_rate}}<br>
+        total_collection_rate:{{car.money.total_collection_rate}}<br>
+        total_rate:{{car.money.total_rate}}<br>
+    </div>
+
     <hr>
     <h4>Collection and deletion point</h4>
     <div *ngFor='let lp of car.location_points; let i = index'>

@@ -3,9 +3,11 @@
         Ref No: {{fb.car.maker}} {{fb.car.model}} {{fb.book_details_id}} <br>
         Status: {{bookStatus[fb.status]}}<br>
         Date from: {{fb.date_from}} || Date To:{{fb.date_to}}<br>
+        Total day: {{fb.total_days_rented}}<br>
         No of driver: {{fb.drivers_no}}<br>
         Collection Point: {{fb.collection_point.title}} ({{fb.collection_point.address}})<br>
         DropOff Point: {{fb.dropoff_point.title}} ({{fb.dropoff_point.address}})<br>
+        TOTAL COST: {{fb.money.total_rate}}
     <hr>
     <h3>renter details</h3>
         Name: {{fb.first_name}} {{fb.last_name}}<br>
@@ -33,15 +35,15 @@
         Contact No: {{fb.car.contact_no}}<br>
     <hr>
     <h3>drivers details</h3>
-        <div *ngFor="let d of fb.drivers">
+    <div *ngFor="let d of fb.drivers">
         Name: {{d.first_name}} || {{d.last_name}} <br>
         Issue at {{d.issuer}} by {{d.issue_country}} <br>
         Driving License No: {{d.license_no}} 
         Year of exp : {{d.exp_in_year}}
         <hr>
-        </div>
+    </div>
     <hr>
-    
+    TOTAL COST: {{fb.money.total_rate}}
     <div>
         <button type="button" (click)="changeBookStatus('C')" >Cancalled</button>
         <button type="button" (click)="changeBookStatus('P')" >Paid</button>

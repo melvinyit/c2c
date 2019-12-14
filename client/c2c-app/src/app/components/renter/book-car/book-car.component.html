@@ -28,12 +28,12 @@
         <div formGroupName="reserved" fxLayout="row" fxLayoutAlign="start center" >
             <div>
                 <mat-form-field>
-                    <input placeholder="date_from" formControlName="date_from" matInput type="text"/>
+                    <input placeholder="date_from (yymmdd)" formControlName="date_from" matInput type="text"/>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input placeholder="date_to" formControlName="date_to" matInput type="text"/>
+                    <input placeholder="date_to (yymmdd)" formControlName="date_to" matInput type="text"/>
                 </mat-form-field>
             </div>
         </div>
@@ -44,7 +44,7 @@
                         <mat-label>collection_point</mat-label>
                         <mat-select formControlName="collection_point_id">
                             <mat-option *ngFor="let lp of car.location_points" [value]="lp.location_point_id">
-                                {{lp.title}} - {{lp.address}}
+                                {{lp.title}} -> ${{lp.rate}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -55,7 +55,7 @@
                             <mat-label>dropoff_point</mat-label>
                             <mat-select formControlName="dropoff_point_id">
                                 <mat-option *ngFor="let lp of car.location_points" [value]="lp.location_point_id">
-                                    {{lp.title}} - {{lp.address}}
+                                    {{lp.title}} -> ${{lp.rate}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

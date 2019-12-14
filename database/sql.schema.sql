@@ -225,6 +225,7 @@ CREATE TABLE `c2cdb`.`book_details` (
   `dropoff_point_id` INT NOT NULL,
   `drivers_no` TINYINT NOT NULL DEFAULT 1,
   `reason` CHAR(2) NOT NULL COMMENT 'TR - travel, WE - Wedding, HO - Holiday, TP - Temp Replacement,EV - Events, OT - Other',
+  `total_days_rented` INT NULL DEFAULT 1,
   `comments` MEDIUMTEXT NULL,
   `created_by` INT NULL,
   `created_date` BIGINT UNSIGNED NULL,

@@ -73,7 +73,6 @@ const GETCARBYID = 'SELECT p.first_name,p.last_name,p.email,p.contact_no,p.image
 const GETRESERVEDBYCARID = 'select * from reserved where car_id = ?'
 const GETLOCATION_POINT = 'select * from location_point';
 
-
 const insertIntoProfile = sql.mkQueryFromPool(sql.mkQuery(CREATEPROFILE),pool);
 const insertIntoCar = sql.mkQueryFromPool(sql.mkQuery(CREATECAR),pool);
 const updatebookstatusbyid = sql.mkQueryFromPool(sql.mkQuery(UPDATEBOOKSTATUSBYID),pool);
@@ -91,6 +90,10 @@ const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
 const selectreservedBycarId = sql.mkQueryFromPool(sql.mkQuery(GETRESERVEDBYCARID),pool);
 const selectalllocationpoint = sql.mkQueryFromPool(sql.mkQuery(GETLOCATION_POINT),pool);
 
+//aggeregate
+const GETCARMONEY = 'select sum(c.rental_rate) as total_rent, sum(bd.total_days_rented)as total_days,sum(ld.rate) as total_dropoff_rate,sum(lc.rate) as total_collection_rate,sum(c.rental_rate*bd.total_days_rented+ld.rate+lc.rate)as total_rate from book b join book_details bd on b.book_details_id=bd.book_details_id join location_point ld on ld.location_point_id = bd.dropoff_point_id join location_point lc on lc.location_point_id = bd.collection_point_id join car c on c.car_id=b.car_id where c.car_id = ?';
+const getCarMoney = sql.mkQueryFromPool(sql.mkQuery(GETCARMONEY),pool);
+
 //other transaction
 const UPDATEPROFILEIMAGE = 'update `profile` set `image_key`=? where profile_id=?';
 const updateProfileImageQuery = sql.mkQuery(UPDATEPROFILEIMAGE);
@@ -103,11 +106,13 @@ const GETCARBYBOOKID = 'select c.*,p.first_name,p.last_name,p.contact_no,p.email
 const GETCOLLECTIONPOINTBYBOOKID = 'select l.* from book b join book_details bd on b.book_details_id=bd.book_details_id join location_point l on l.location_point_id = bd.collection_point_id where b.book_id = ?';
 const GETDROPOFFPOINTBYBOOKID = 'select l.* from book b join book_details bd on b.book_details_id=bd.book_details_id join location_point l on l.location_point_id = bd.dropoff_point_id where b.book_id = ?';
 const GETDRIVERSBYBOOKID = 'select d.*,l.* from book b join book_details bd on b.book_details_id=bd.book_details_id join book_driver_junction j on bd.book_details_id=j.book_details_id join driver d on d.driver_id=j.driver_id join license l on l.license_id = d.license_id where b.book_id=?';
+const GETMONEY = 'select c.rental_rate, bd.total_days_rented,ld.rate as dropoff_rate,lc.rate as collection_rate,((c.rental_rate*bd.total_days_rented)+ld.rate+lc.rate)as total_rate from book b join book_details bd on b.book_details_id=bd.book_details_id join location_point ld on ld.location_point_id = bd.dropoff_point_id join location_point lc on lc.location_point_id = bd.collection_point_id join car c on c.car_id=b.car_id where book_id = ?';
 const getbook1book = sql.mkQueryFromPool(sql.mkQuery(GETBOOKFULLBYID),pool);
 const getbook2car = sql.mkQueryFromPool(sql.mkQuery(GETCARBYBOOKID),pool);
 const getbook3cp = sql.mkQueryFromPool(sql.mkQuery(GETCOLLECTIONPOINTBYBOOKID),pool);
 const getbook4dp = sql.mkQueryFromPool(sql.mkQuery(GETDROPOFFPOINTBYBOOKID),pool);
 const getbook5driver = sql.mkQueryFromPool(sql.mkQuery(GETDRIVERSBYBOOKID),pool);
+const getbook6money  = sql.mkQueryFromPool(sql.mkQuery(GETMONEY),pool);
 
 //create book transaction sql
 const CREATERESERVED = 'INSERT INTO `reserved` SET ?';
@@ -166,6 +171,9 @@ const getFullSingleCar = async (carid) => {
             //console.log(e);
             result.location_points.push({...e})
         });
+        sqlobj = await getCarMoney([carid]);
+        //console.log(sqlobj);
+        result.money = {...sqlobj[0]};
         //console.log('inside async',result);
         return result;
     })().catch(error=>{
@@ -197,7 +205,9 @@ const getFullSingleBooking = async (bookid) => {
         sqlobj.forEach(e => {
             result.drivers.push({...e})
         });
-        console.log(result);
+        sqlobj = await getbook6money([bookid]);
+        result.money = {...sqlobj[0]};
+        //console.log(result);
         return result;
     })().catch(error=>{
         console.log(error);
@@ -355,7 +365,7 @@ profileSecureRouter.put('/update',(req,res)=>{
     //console.log(profile_id);
     updateProfileById([params,profile_id]).then(result=>{
         //console.log(JSON.stringify(result));
-        console.log(result);
+        //console.log(result);
         res.status(203).json({msg:`Hi ${params.first_name} ${params.last_name}, your profile had been successfully updated`,result});
     }).catch(err=>{
         console.log(err);
