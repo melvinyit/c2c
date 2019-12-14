@@ -2,6 +2,10 @@
     padding:0;
     margin:0;
 }
+.morespacebetween{
+  padding:0;
+  margin:0px 3vw;
+}
 
 span {
     font-size: 0.8em;

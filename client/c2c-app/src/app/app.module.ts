@@ -25,6 +25,7 @@ import { LogoutComponent } from './components/main/authentication/logout.compone
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialsModule } from './materials.module';
 import { RoutingpageComponent } from './components/test/routingpage.component';
+import { DisplayComponent } from './components/display/display.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { RoutingpageComponent } from './components/test/routingpage.component';
     RegisterRenterComponent,
     RegisterOwnerComponent,
     LogoutComponent,
-    RoutingpageComponent
+    RoutingpageComponent,
+    DisplayComponent
   ],
   imports: [
     BrowserModule,

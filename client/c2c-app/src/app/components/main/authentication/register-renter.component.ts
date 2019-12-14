@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProfilesService } from 'src/app/services/profiles.service';
 import { profile, profileStatusCode, profileTypeCode } from 'src/app/models/profile';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-renter',
@@ -10,7 +11,7 @@ import { FormBuilder } from '@angular/forms';
 })
 export class RegisterRenterComponent implements OnInit {
 
-  constructor(private profileSrv:ProfilesService,private fb:FormBuilder) { }
+  constructor(private profileSrv:ProfilesService,private fb:FormBuilder, private router:Router) { }
 
   registerRenterForm = this.fb.group({
     username:['defaultusername'],
@@ -42,7 +43,10 @@ export class RegisterRenterComponent implements OnInit {
     type:profileTypeCode['Renter']
     };
     //console.log(prof);
-    this.profileSrv.createNewProfile(prof).then(r=>console.log(r)).then(e=>console.log(e))
+    this.profileSrv.createNewProfile(prof).then(r=>{
+      //console.log(r);
+      this.router.navigate(['display/'+r.msg]);
+    }).then(e=>console.log(e))
   }
 
 }

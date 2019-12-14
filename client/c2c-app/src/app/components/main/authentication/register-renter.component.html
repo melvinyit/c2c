@@ -1,13 +1,52 @@
-<p>register-renter works!123</p>
+<h5>Welcome. Please fill up the form below</h5>
+<h3>Register Form</h3>
 
 <form [formGroup]="registerRenterForm" (ngSubmit)="createRenterProfile()">
-    username:<input type="text" name="username" formControlName="username"/><br/>
-    password:<input type="text" name="password" formControlName="password"/><br/>
-    confirmPassword:<input type="text" name="confirmPassword" formControlName="confirmPassword"/><br/>
-    email:<input type="text" name="email" formControlName="email"/><br/>
-    contactNo:<input type="text" name="contactNo" formControlName="contactNo"/><br/>
-    firstName:<input type="text" name="firstName" formControlName="firstName"/><br/>
-    lastName:<input type="text" name="lastName" formControlName="lastName"/><br/>
-    address:<input type="text" name="address" formControlName="address"/><br/>
-    <button type="submit">Register</button>
+        <div fxLayout="column" fxLayoutAlign="start">
+                <div>
+                    <mat-form-field>
+                        <input matInput placeholder="Your username" type="text" formControlName="username"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input matInput placeholder="Your password" type="text" formControlName="password"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="confirmPassword" formControlName="confirmPassword" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="email" formControlName="email" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="contactNo" formControlName="contactNo" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="firstName" formControlName="firstName" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="lastName" formControlName="lastName" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input placeholder="address" formControlName="address" matInput type="text"/>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <button mat-button color="primary" [disabled]="this.registerRenterForm.invalid" type="submit">
+                        Register
+                    </button>
+                </div>
+            </div>
 </form>

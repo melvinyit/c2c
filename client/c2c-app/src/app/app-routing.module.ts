@@ -17,6 +17,7 @@ import { LogoutComponent } from './components/main/authentication/logout.compone
 import { OwnerAuthGuard } from './guards/owner-auth.guard';
 import { AdminAuthGuard } from './guards/admin-auth.guard';
 import { RoutingpageComponent } from './components/test/routingpage.component';
+import { DisplayComponent } from './components/display/display.component';
 
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path:'',component:ToolbarComponent, outlet:'header'},
   {path:'',component:RoutingpageComponent, outlet:'tester'},
   {path:'home',component:HomepageComponent},
+  {path:'display/:msg',component:DisplayComponent},
   {path:'contact-us',component:ContactUsComponent},
   {path:'about-us',component:AboutUsComponent},
   {path:'FAQ',component:FAQComponent},
