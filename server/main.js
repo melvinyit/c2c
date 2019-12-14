@@ -151,7 +151,7 @@ profileRouter.post('/create',(req,res)=>{
     //console.log(params);
     insertIntoProfile([params]).then(result=>{
         //console.log(JSON.stringify(result))
-        res.status(201).json({msg:'created'});
+        res.status(201).json({msg:`Your account as '${req.body.username}' had been created`});
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
@@ -176,10 +176,10 @@ profileRouter.post('/authProfile',(req,res)=>{
                 switch(profile.type){
                     case 'A':
                     case 'O':
-                        expTime= Math.floor(Date.now() / 1000) + (60*2);
+                        expTime= Math.floor(Date.now() / 1000) + (60*120);
                         break;
                     case 'R':
-                        expTime= Math.floor(Date.now() / 1000) + (60*60);
+                        expTime= Math.floor(Date.now() / 1000) + (60*120);
                         break;
                     default:
                         console.log('type not found',profile.type);
