@@ -16,7 +16,8 @@ export class BookService {
   GETLISTOFBOOKINGFOROWNER='/secure/list/owner/booking';
   GETLISTOFBOOKINGFORRENTER='/secure/list/renter/booking';
   GETFULLBOOKING='/secure/full/booking/';
-  UPDATEBOOKINGSTATUS='/secure/update/booking/status'
+  UPDATEBOOKINGSTATUS='/secure/update/booking/status';
+  PAIDBOOK='/secure/paid/paypal';
 
 
   addNewBooking(book):Promise<any>{
@@ -43,6 +44,12 @@ export class BookService {
       status:status
     }
     return this.http.put(this.BASEURL+this.UPDATEBOOKINGSTATUS,params).toPromise();
+  }
+  paidUpdatingServer(order,book):Promise<any>{
+    order.book = {...book};
+    console.log(order);
+    console.log('passing order');
+    return this.http.post(this.BASEURL+this.PAIDBOOK,order).toPromise();
   }
 
 }

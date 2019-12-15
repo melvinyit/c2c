@@ -16,6 +16,7 @@ export class PaymentComponent implements OnInit {
   fullbook = null;
   bookStatus=bookStatus;
   paidFor = false;
+  msg='';
 
   constructor(private bookSrv:BookService,private ar:ActivatedRoute){}
 
@@ -34,7 +35,11 @@ export class PaymentComponent implements OnInit {
   };
 
   generateInvoice(order){
-    console.log('generate invoice')
+    console.log('generate invoice');
+    this.bookSrv.paidUpdatingServer(order,this.fullbook).then(r=>{
+      console.log(r);
+      this.msg = 'Your invoice number is > '+r.reference_no;
+    }).catch(e=>console.log(e));
   }
 
   attachPaypal(){
@@ -57,6 +62,7 @@ export class PaymentComponent implements OnInit {
             const order = await actions.order.capture();
             this.paidFor = true;
             console.log(order);
+            this.generateInvoice(order)
           },
           onError: err => {
             console.log(err);

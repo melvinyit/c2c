@@ -70,6 +70,7 @@ const pool = mysql.createPool(dbConf.mysql);
 const client = new MongoClient(dbConf.mongodb.url,{ useUnifiedTopology: true });
 
 const mongoBook = () => client.db('c2c').collection('BookHistory');
+const mongoTrans = () => client.db('c2c').collection('TransactionHistory');
 //s3
 const s3 = new aws.S3({
 	endpoint: new aws.Endpoint(dbConf.s3.endpoint),
@@ -138,6 +139,11 @@ const UPDATEPROFILEIMAGE = 'update `profile` set `image_key`=? where profile_id=
 const updateProfileImageQuery = sql.mkQuery(UPDATEPROFILEIMAGE);
 const UPDATECARIMAGE = 'update `car` set `images_keys`=? where car_id=?';
 const updateCarImageQuery = sql.mkQuery(UPDATECARIMAGE);
+const INSERTINVOICESTRING = 'insert into invoice set ?';
+const GETINVOICESTRING = 'select * from invoice where invoice_id=?';
+const QupdateBookStatus = sql.mkQuery(UPDATEBOOKSTATUSBYID);
+const QinsertIntoInvoice = sql.mkQuery(INSERTINVOICESTRING);
+const QgetInvoiceById = sql.mkQuery(GETINVOICESTRING);
 
 //retrive booking 
 const GETBOOKFULLBYID = 'select b.*,bd.*,r.*,p.first_name,p.last_name,p.contact_no,p.email,p.image_key from book b join book_details bd on b.book_details_id=bd.book_details_id join reserved r on r.reserved_id=b.reserved_id join `profile` p on p.profile_id = b.renter_id where b.book_id = ?';
@@ -589,6 +595,7 @@ bookingSecureRouter.post('/add',(req,res)=>{
             //console.log('reservedId',reservedId);
             //console.log('bookDetailsId',bookDetailsId);
             //console.log('final book result',insertResult.result);
+            await mongoBook().insertOne(req.body);
             sql.commit(start);
 			conn.release();
 			res.status(201).json({msg:'Your booking is created'});
@@ -643,6 +650,48 @@ bookingSecureRouter.put('/update/booking/status',(req,res)=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
     });
+});
+
+bookingSecureRouter.post('/paid/paypal',(req,res)=>{
+    //console.log(req.body);
+    const rno = uuid().substring(9,18);
+    pool.getConnection((err,conn)=>{
+		if (err) return console.log(err);	
+		(async () =>{
+            const start = await sql.startTransaction(conn);
+            await QupdateBookStatus({...start,params:['P',req.body.book.book_id]});
+            const invoiceinsert = {
+                reference_no:rno,
+                status:'A',
+                amount:req.body.book.money.total_rate,
+                type:'paypal',
+                from:req.body.book.renter_id,
+                to:req.body.book.car.owner_id
+            };
+            const result = await QinsertIntoInvoice({...start,params:[invoiceinsert]});
+            //console.log(result.result);
+            //console.log(result.result.insertId);
+            //console.log('result InsertId ');
+            const invoice = await QgetInvoiceById({...start,params:[result.result.insertId]});
+            const order = {...req.body};
+            order.invoice = {...invoice.result[0]};
+            //const await mongo insert into transaction history
+            await mongoTrans().insertOne(order);
+            //console.log(mresult);
+            await sql.commit({...start});
+            console.log('invoice:',invoice.result);
+            conn.release();
+			res.status(200).json({...invoice.result[0]});
+		})().catch(error=>{
+			console.log(error);
+            conn.rollback(err=>{
+                if(err) console.log(err);
+                console.log('rollbacked pending conn release');
+                conn.release();
+            });
+			res.status(200).json({msg:'err'});
+		});
+	});
 });
 //END booking api
 

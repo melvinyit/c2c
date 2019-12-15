@@ -24,7 +24,7 @@
     </ng-template>    
     <hr>
     <form [formGroup]="bookingForm" (ngSubmit)="bookcar()" class="compact" fxLayout="column">
-        <input type="text" name="car_id" formControlName="car_id" readonly><br>
+        <input type="hidden" name="car_id" formControlName="car_id" readonly><br>
         <div formGroupName="reserved" fxLayout="row" fxLayoutAlign="start center" >
             <div>
                 <mat-form-field>
