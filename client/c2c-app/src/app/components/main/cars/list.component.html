@@ -1,3 +1,12 @@
+<div fxLayout="row" fxLayoutAlign="start center">
+    <mat-icon (click)="gotoPrevious()">navigate_before</mat-icon>
+    <p>{{currentpage}}</p>
+    <mat-icon (click)="gotoNext()">navigate_next</mat-icon>
+
+    <p>.      total:{{total}}</p>
+    
+</div>
+
 <div *ngIf="listOfCar" fxLayout="column" fxLayoutAlign="start">
     <mat-card *ngFor="let car of listOfCar" (click)="gotoCarDetail(car.car_id)">
         <mat-card-header>
@@ -22,3 +31,4 @@
     </mat-card>
 </div>
 <ng-template #noimage><p>no image</p></ng-template>
+
