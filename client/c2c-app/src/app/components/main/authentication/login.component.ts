@@ -27,7 +27,8 @@ export class LoginComponent implements OnInit {
         switch(result.type){
           case 'R':
             console.log('login renter')
-            this.router.navigate(['renter/manage-profile']);
+            //this.router.navigate(['renter/manage-profile']);
+            this.router.navigate([{outlets: {primary: '/renter/manage-profile' ,header: '/'}}]);
             break;
           case 'O':
             console.log('login owner')

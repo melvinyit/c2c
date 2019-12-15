@@ -22,7 +22,10 @@ export class OTPComponent implements OnInit {
   authOTP(){
     this.profSrv.authOTPcode(this.otpForm.value.code).then(r=>{
       //console.log(r);
-      this.router.navigate(['home']);
+      //this.router.navigate(['home']);
+      console.log(r);
+      this.router.navigate([{outlets: {primary: '/home' ,header: '/'}}]);
+      //this.router.navigate([{ outlets: { header: ['clear'] } }], { skipLocationChange: true });
     }).catch(e=>console.log(e));
   }
 

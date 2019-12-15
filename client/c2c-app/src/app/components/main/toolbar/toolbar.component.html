@@ -3,28 +3,69 @@
         <mat-icon>home</mat-icon>
         <span>Car2Car</span>
     </div>
-    <div>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>menu</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item routerLink="/login">
-                <mat-icon color="primary"> lock-open</mat-icon>
-                <span>Login</span>
+    <div fxLayout="row" fxLayoutAlign="end center">
+        <div >
+            <button *ngIf="role && role == 'R'" mat-icon-button [matMenuTriggerFor]="renteractionmenu">
+                <mat-icon>verified_user</mat-icon>
             </button>
-            <button mat-menu-item routerLink="/register/renter">
-                <mat-icon color="primary">person</mat-icon>
-                <span>Register as Renter</span>
+            <mat-menu #renteractionmenu="matMenu">
+            <button mat-menu-item routerLink="/renter/manage-profile">
+                <span>Manage Profile renter</span>
             </button>
-            <button mat-menu-item routerLink="/register/owner">
-                <mat-icon color="primary">drive_eta</mat-icon>
-                <span>Register as Car Owner</span>
+            <button mat-menu-item routerLink="/renter/check-booking">
+                <span>Check all booking</span>
             </button>
             <button mat-menu-item routerLink="/logout">
                 <mat-icon color="primary"> logout</mat-icon>
                 <span>Logout</span>
             </button>
-        </mat-menu>
+            </mat-menu>
+
+            <button *ngIf="role && role == 'O'" mat-icon-button [matMenuTriggerFor]="owneractionmenu">
+                <mat-icon>supervised_user_circle</mat-icon>
+            </button>
+            <mat-menu #owneractionmenu="matMenu">
+            <button mat-menu-item routerLink="/owner/manage-profile">
+                <span>Manage Profile owner</span>
+            </button>
+            <button mat-menu-item routerLink="/owner/add-car">
+                <span>Add car</span>
+            </button>
+            <button mat-menu-item routerLink="/owner/list-cars">
+                <span>Manage car</span>
+            </button>
+            <button mat-menu-item routerLink="/owner/list-booking">
+                <span>Manage booking</span>
+            </button>
+            <button mat-menu-item routerLink="/logout">
+                <mat-icon color="primary"> logout</mat-icon>
+                <span>Logout</span>
+            </button>
+            </mat-menu>
+        </div>
+        <div>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item routerLink="/login">
+                    <mat-icon color="primary"> lock-open</mat-icon>
+                    <span>Login</span>
+                </button>
+                <button mat-menu-item routerLink="/register/renter">
+                    <mat-icon color="primary">person</mat-icon>
+                    <span>Register as Renter</span>
+                </button>
+                <button mat-menu-item routerLink="/register/owner">
+                    <mat-icon color="primary">drive_eta</mat-icon>
+                    <span>Register as Car Owner</span>
+                </button>
+                <button mat-menu-item routerLink="/logout">
+                    <mat-icon color="primary"> logout</mat-icon>
+                    <span>Logout</span>
+                </button>
+            </mat-menu>
+        </div>
     </div>
 </mat-toolbar>
 

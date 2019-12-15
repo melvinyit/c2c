@@ -8,9 +8,12 @@ import { Router } from '@angular/router';
 })
 export class ToolbarComponent implements OnInit {
 
+  role = null;
   constructor(private r:Router) { }
 
   ngOnInit() {
+    this.role = localStorage.getItem('c2c_role');
+    console.log(this.role);
   }
 
   gotoHome(){

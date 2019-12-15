@@ -24,6 +24,7 @@ const routes: Routes = [
   {path:'',component:HomepageComponent},
   {path:'',component:FooterComponent, outlet:'footer'},
   {path:'',component:ToolbarComponent, outlet:'header'},
+  {path:'clear',component:ToolbarComponent, outlet:'header'},
   {path:'',component:RoutingpageComponent, outlet:'tester'},
   {path:'home',component:HomepageComponent},
   {path:'display/:msg',component:DisplayComponent},
