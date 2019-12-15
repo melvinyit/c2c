@@ -11,8 +11,11 @@ export class NewsletterServiceService {
 
   }
 
-  URL = 'http://localhost:3000/subscribe';
-  URLSEND = 'http://localhost:3000/send/webpush';
+  //URL = 'http://localhost:3000/subscribe';
+  //URLSEND = 'http://localhost:3000/send/webpush';
+
+  URL = '/subscribe';
+  URLSEND = '/send/webpush';
 
   addPushSubscriber(sub:any) {
       return this.http.post(this.URL, sub);

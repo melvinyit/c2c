@@ -25,6 +25,8 @@ const routes: Routes = [
   {path:'',component:HomepageComponent},
   {path:'',component:FooterComponent, outlet:'footer'},
   {path:'',component:ToolbarComponent, outlet:'header'},
+  {path:'login/r',component:ToolbarComponent, outlet:'header'},
+  {path:'login/o',component:ToolbarComponent, outlet:'header'},
   {path:'clear',component:ToolbarComponent, outlet:'header'},
   {path:'',component:RoutingpageComponent, outlet:'tester'},
   {path:'carpark',component:CarparkComponent},

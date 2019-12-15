@@ -728,6 +728,8 @@ app.use('/api/car/secure',tokenDecoder(),carSecureRouter);
 app.use('/api/booking/secure',tokenDecoder(),bookingSecureRouter);
 
 
+app.use(express.static(path.join(__dirname,'c2cdist','c2c-app')));
+
 app.use((req,res)=>{
 	res.status(400).json({msg:'Bad Request'});
 });

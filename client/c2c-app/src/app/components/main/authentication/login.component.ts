@@ -27,8 +27,11 @@ export class LoginComponent implements OnInit {
         switch(result.type){
           case 'R':
             console.log('login renter')
+            
+            //this.router.navigate([{ outlets: { header: ['login/r'] } }], { skipLocationChange: true });
             //this.router.navigate(['renter/manage-profile']);
-            this.router.navigate([{outlets: {primary: '/renter/manage-profile' ,header: '/'}}]);
+            this.router.navigate([{outlets:{primary: ['renter/manage-profile'] ,header: ['login/r']}}]);
+
             break;
           case 'O':
             console.log('login owner')
