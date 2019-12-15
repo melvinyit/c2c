@@ -300,10 +300,10 @@ profileRouter.post('/authProfile',(req,res)=>{
                 switch(profile.type){
                     case 'A':
                     case 'O':
-                        expTime= Math.floor(Date.now() / 1000) + (60*120);
+                        expTime= Math.floor(Date.now() / 1000) + (60*60);
                         break;
                     case 'R':
-                        expTime= Math.floor(Date.now() / 1000) + (60*120);
+                        expTime= Math.floor(Date.now() / 1000) + (60*60);
                         break;
                     default:
                         console.log('type not found',profile.type);

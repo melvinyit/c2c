@@ -9,8 +9,8 @@ export class BookService {
 
   constructor(private http:HttpClient) { }
 
-  //BASEURL = 'http://localhost:3000/api/booking';
-  BASEURL = '/api/booking';
+  BASEURL = 'http://localhost:3000/api/booking';
+  //BASEURL = '/api/booking';
   ADDBOOK='/secure/add';
 
   GETLISTOFBOOKINGFOROWNER='/secure/list/owner/booking';

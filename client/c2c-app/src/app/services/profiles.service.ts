@@ -13,8 +13,8 @@ export class ProfilesService {
   //tokenExpire=0;
 
   constructor(private http:HttpClient) { }
-  //BASEURL = 'http://localhost:3000/api/profile';
-  BASEURL = '/api/profile';
+  BASEURL = 'http://localhost:3000/api/profile';
+  //BASEURL = '/api/profile';
   CREATEPROFILE = '/create';
   AUTHPROFILE = '/authProfile';
   GETPROFILE='/secure/get';

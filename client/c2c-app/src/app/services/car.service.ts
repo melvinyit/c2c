@@ -9,10 +9,10 @@ export class CarService {
 
   constructor(private http:HttpClient) { }
 
-  //CARPARK='http://localhost:3000/api/external/lta';
-  //BASEURL = 'http://localhost:3000/api/car';
-  CARPARK='/api/external/lta';
-  BASEURL = '/api/car';
+  CARPARK='http://localhost:3000/api/external/lta';
+  BASEURL = 'http://localhost:3000/api/car';
+  //CARPARK='/api/external/lta';
+  //BASEURL = '/api/car';
   ADDCAR='/secure/add';
   LISTALL='/list/all';
   LISTSEARCH='/list/search';
