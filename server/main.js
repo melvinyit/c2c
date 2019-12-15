@@ -25,13 +25,44 @@ const initDb = require('./init.db');
 //config
 const APPNAME = 'c2c-app';
 const PORT = parseInt(process.argv[2] || process.env.APP_PORT || process.env.PORT) || 3000;
-const SERVER_JWT_SECRET = 'secretkeyforjwtTODO-Generate';
-const dbConf = require('./conf.db');
-dbConf.mysql.ssl = {ca: fs.readFileSync(dbConf.mysql.cacert)};
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY || dbConf.webpush.publicKey;
-const privateVapidKey = process.env.PRIVATE_VAPID_KEY  || dbConf.webpush.privateKey;
 //govapi format https://api.data.gov.sg/v1/transport/carpark-availability?date_time=YYYY-MM-DD[T]HH:mm:ss(SGT)
 const GOVAPI = 'https://api.data.gov.sg/v1/transport/carpark-availability';
+
+let dbConf = {};
+if(fs.existsSync('./conf.db.js')){
+    //console.log('file found');
+    //process.exit(0);
+    dbConf = require('./conf.db');
+    dbConf.mysql.ssl = {ca: fs.readFileSync(dbConf.mysql.cacert)};
+    
+}else{
+    //console.log('file not found');
+    dbConf['mysql'] = {
+        host: process.env.SQLHOST,
+		port: process.env.SQLPORT,
+        user: process.env.SQLUSER, 
+        password: process.env.SQLPASS,
+		database: process.env.SQLDBNAME,
+        connectionLimit: 10,
+        ssl : {ca:process.env.SQLCA},
+    }
+    dbConf['s3'] = {
+		accessKey: process.env.S3ACCESSKEY,
+		secret: process.env.S3SECRET,
+		endpoint: 'sgp1.digitaloceanspaces.com'
+    }
+    dbConf['mongodb'] = {
+		url:process.env.MONGOURL
+    }
+    //console.log(dbConf);
+    //process.exit(0);
+}
+
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY || dbConf.webpush.publicKey;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY  || dbConf.webpush.privateKey;
+const SERVER_JWT_SECRET = process.env.JWTSECRET || dbConf.jwt.secret;
+
+
 
 //sql
 const pool = mysql.createPool(dbConf.mysql);
