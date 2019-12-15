@@ -22,6 +22,9 @@ const sql = require('./util.sql');
 const s3Util = require('./util.bucket');
 const initDb = require('./init.db');
 
+
+
+
 //config
 const APPNAME = 'c2c-app';
 const PORT = parseInt(process.argv[2] || process.env.APP_PORT || process.env.PORT) || 3000;
@@ -63,6 +66,24 @@ const privateVapidKey = process.env.PRIVATE_VAPID_KEY  || dbConf.webpush.private
 const SERVER_JWT_SECRET = process.env.JWTSECRET || dbConf.jwt.secret;
 
 
+//firebase firebase firebase
+/*
+const firebase = require("firebase/app");
+// Add the Firebase products that you want to use
+require("firebase/messaging");
+const firebaseConfig = {
+
+    messagingSenderId: "431563138752",
+
+  };
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+const messaging = firebase.messaging();
+// Add the public key generated from the console here.
+messaging.usePublicVapidKey(publicVapidKey);
+*/
+//firebase firebase firebase
 
 //sql
 const pool = mysql.createPool(dbConf.mysql);
@@ -773,44 +794,17 @@ app.route('/api/external/lta')
     })
 
 //for webpush
+let databaseSub = []
 
 app.post('/subscribe', (req, res) => {
     console.log('sub and push');
     const subscription = req.body;
+    databaseSub.push(subscription);
     res.status(201).json({msg: 'Newsletter sent successfully.'});
     const payload = JSON.stringify({ title: 'test' });
-    console.log(subscription);
-    webpush.sendNotification(subscription, payload).catch(error => {
-      console.error(error.stack);
-      //res.sendStatus(500);
-    });
-  });
-app.post('/send/webpush', (req, res) => {
-    console.log('pushing only');
-    //const subscription = req.body;
-    res.status(201).json({});
-    //retrive all subscriptoin
-    const payload = JSON.stringify({ title: 'test' });
-
-    console.log(subscription);
-
-    webpush.sendNotification(subscription, payload)
-    .then(() => console.log('success push'))
-    .catch(error => {
-        console.error(error.stack);
-    });
-});
-
-/*
-  export function sendNewsletter(req, res) {
-
-    const allSubscriptions = ... get subscriptions from database 
-
-    console.log('Total subscriptions', allSubscriptions.length);
-
     const notificationPayload = {
         "notification": {
-            "title": "Angular News",
+            "title": "Angular News 123",
             "body": "Newsletter Available!",
             "icon": "assets/main-page-logo-small-hat.png",
             "vibrate": [100, 50, 100],
@@ -824,6 +818,61 @@ app.post('/send/webpush', (req, res) => {
             }]
         }
     };
+    console.log(subscription);
+    webpush.sendNotification(subscription, JSON.stringify(notificationPayload)).catch(error => {
+      console.error(error.stack);
+      //res.sendStatus(500);
+    });
+  });
+app.get('/send/webpush', (req, res) => {
+    console.log('pushing only');
+    //const subscription = req.body;
+    res.status(201).json({});
+    //retrive all subscriptoin
+    const payload = JSON.stringify({ title: 'test' });
+    const allSubscriptions = databaseSub;
+    const notificationPayload = {
+        "notification": {
+            "title": "Angular News 456",
+            "body": "Newsletter Available!",
+            "icon": "assets/main-page-logo-small-hat.png",
+            "vibrate": [100, 50, 100],
+            "data": {
+                "dateOfArrival": Date.now(),
+                "primaryKey": 1
+            },
+            "actions": [{
+                "action": "explore",
+                "title": "Go to the site"
+            }]
+        }
+    };
+
+    console.log(allSubscriptions);
+    Promise.all(allSubscriptions.map(sub => webpush.sendNotification(
+        sub, JSON.stringify(notificationPayload) )))
+        .then(() => res.status(200).json({message: 'Newsletter sent successfully.'}))
+        .catch(err => {
+            console.error("Error sending notification, reason: ", err);
+            res.sendStatus(500);
+        });
+    /*
+    webpush.sendNotification(subscription, notificationPayload)
+    .then(() => console.log('success push'))
+    .catch(error => {
+        console.error(error.stack);
+    });
+    */
+});
+
+/*
+  export function sendNewsletter(req, res) {
+
+    const allSubscriptions = ... get subscriptions from database 
+
+    console.log('Total subscriptions', allSubscriptions.length);
+
+    BHgN_e3Hc--oFpwLyuyIvV-nluO7QD4oP-rkCvVpVBFUCEQTDOEZic__Ew6DuEg1cB_-1KF0Xu1-kpTamNcyAcs
 
     Promise.all(allSubscriptions.map(sub => webpush.sendNotification(
         sub, JSON.stringify(notificationPayload) )))

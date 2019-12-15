@@ -15,8 +15,7 @@ export class FooterComponent implements OnInit {
   }
 
   constructor(private nlSrv:NewsletterServiceService,private sw:SwPush){}
-  readonly VAPID_PUBLIC_KEY='BDlHHtvlqIbSI_OajHWWM-PdQo6A1dFDR08YcxXgkP2SR6oLr42nDpE-HTqPS_fV-l7OL-L9x2_J7JPEAjtKZ6c';
-	
+  readonly VAPID_PUBLIC_KEY=`BHgN_e3Hc--oFpwLyuyIvV-nluO7QD4oP-rkCvVpVBFUCEQTDOEZic__Ew6DuEg1cB_-1KF0Xu1-kpTamNcyAcs`;
   subscribeToNotifications() {
     console.log(this.VAPID_PUBLIC_KEY);
       this.sw.requestSubscription({

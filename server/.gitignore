@@ -3,3 +3,4 @@ conf.sql.js
 conf.db.js
 .env
 /tmp/*
+firebase-web.js

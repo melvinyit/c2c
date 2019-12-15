@@ -17,6 +17,7 @@ export class NewsletterServiceService {
   URL = '/subscribe';
   URLSEND = '/send/webpush';
 
+  
   addPushSubscriber(sub:any) {
       return this.http.post(this.URL, sub);
   }

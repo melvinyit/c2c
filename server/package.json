@@ -13,6 +13,8 @@
     "aws-sdk": "^2.587.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "firebase": "^7.6.0",
+    "firebase-admin": "^8.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.4.0",
     "morgan": "^1.9.1",
