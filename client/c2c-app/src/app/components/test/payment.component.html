@@ -1,0 +1,23 @@
+<h2>Please select your payment type</h2>
+
+  
+<div *ngIf="!paidFor">
+    <h3>booking details</h3>
+        Ref No: {{fullbook.car.maker}}-{{fullbook.car.model}}-{{fullbook.book_details_id}} <br>
+        Status: {{bookStatus[fullbook.status]}}<br>
+        Date from: {{fullbook.date_from}} || Date To:{{fullbook.date_to}}<br>
+        Total day: {{fullbook.total_days_rented}}<br>
+        No of driver: {{fullbook.drivers_no}}<br>
+        Collection Point: {{fullbook.collection_point.title}} ({{fullbook.collection_point.address}})<br>
+        DropOff Point: {{fullbook.dropoff_point.title}} ({{fullbook.dropoff_point.address}})<br>
+        TOTAL COST: {{fullbook.money.total_rate}}
+    <hr>
+</div>
+
+<div *ngIf=paidFor>
+    <h1>Paid!!!!!!!!!!!!!!</h1>
+
+</div>
+
+
+<div [hidden]="paidFor" #paypal></div>

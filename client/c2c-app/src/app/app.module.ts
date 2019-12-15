@@ -29,6 +29,7 @@ import { DisplayComponent } from './components/display/display.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { CarparkComponent } from './components/test/carpark.component';
+import { PaymentComponent } from './components/test/payment.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { CarparkComponent } from './components/test/carpark.component';
     LogoutComponent,
     RoutingpageComponent,
     DisplayComponent,
-    CarparkComponent
+    CarparkComponent,
+    PaymentComponent
   ],
   imports: [
     BrowserModule,
