@@ -1,3 +1,29 @@
 <p>homepage</p>
 
-<button type="button" routerLink="/list-cars/all">Search All</button>
+
+
+<h3>Login Form</h3>
+<form [formGroup]="searchForm" (ngSubmit)="search()" >
+    <div fxLayout="column" fxLayoutAlign="start">
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="min rate value" type="text" formControlName="minrate"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="max rate value" type="text" formControlName="maxrate"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="model" type="text" formControlName="model"/>
+            </mat-form-field>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" [disabled]="this.searchForm.invalid" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+<hr>
+<button mat-raised-button color="primary" type="button" routerLink="/list-cars/all">Search All</button>

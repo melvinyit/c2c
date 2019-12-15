@@ -12,6 +12,7 @@ export class CarService {
   BASEURL = 'http://localhost:3000/api/car';
   ADDCAR='/secure/add';
   LISTALL='/list/all';
+  LISTSEARCH='/list/search';
   GETONECAR='/get/one/';
   GETCARBYOWNERID='/secure/owner/list';
   UPLOADPROFILEIMAGE='/secure/upload/car-image';
@@ -25,6 +26,17 @@ export class CarService {
   getListAllCar():Promise<car[]>{
     console.log('find cars');
     return this.http.get<car[]>(this.BASEURL+this.LISTALL).toPromise();
+  }
+
+  getListAllCarSearch(params):Promise<car[]>{
+    console.log('search cars');
+    let query = '?';
+    for(let e in params){
+      console.log(e);
+      query = query + e + '=' +params[e] + '&';
+    }
+    console.log(query)
+    return this.http.get<car[]>(this.BASEURL+this.LISTSEARCH+query).toPromise();
   }
 
   getListOwnerCar():Promise<car[]>{

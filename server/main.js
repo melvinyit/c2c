@@ -92,6 +92,8 @@ const selectCarByOwnerId = sql.mkQueryFromPool(sql.mkQuery(GETCARSBYOWNERID),poo
 const selectCarById = sql.mkQueryFromPool(sql.mkQuery(GETCARBYID),pool);
 const selectreservedBycarId = sql.mkQueryFromPool(sql.mkQuery(GETRESERVEDBYCARID),pool);
 const selectalllocationpoint = sql.mkQueryFromPool(sql.mkQuery(GETLOCATION_POINT),pool);
+const GETLISTOFCARSwithsearch = 'SELECT p.username,p.first_name,p.last_name,p.image_key,c.* FROM `car` c JOIN `profile` p ON c.owner_id=p.profile_id where c.rental_rate between ? and ? and (c.model like (?) or c.maker like (?)) LIMIT ? OFFSET ?';
+const selectListCarsSearchPagination = sql.mkQueryFromPool(sql.mkQuery(GETLISTOFCARSwithsearch),pool);
 
 //aggeregate
 const GETCARMONEY = 'select sum(c.rental_rate) as total_rent, sum(bd.total_days_rented)as total_days,sum(ld.rate) as total_dropoff_rate,sum(lc.rate) as total_collection_rate,sum(c.rental_rate*bd.total_days_rented+ld.rate+lc.rate)as total_rate from book b join book_details bd on b.book_details_id=bd.book_details_id join location_point ld on ld.location_point_id = bd.dropoff_point_id join location_point lc on lc.location_point_id = bd.collection_point_id join car c on c.car_id=b.car_id where c.car_id = ?';
@@ -418,6 +420,26 @@ carRouter.get('/list/all',(req,res)=>{
         res.status(500).json({msg:'database error'});
     });
 });
+carRouter.get('/list/search',(req,res)=>{
+    //console.log('ca');
+    const limit = 5;
+    const offset = 0;
+    const query = req.query;
+    const minrate = req.query.minrate || 0;
+    const maxrate = req.query.maxrate || 900;
+    const model = req.query.model || '';
+    console.log(query);
+    //res.status(200).json({msg:'ok'});
+    
+    selectListCarsSearchPagination([minrate,maxrate,`%${model}%`,`%${model}%`,limit,offset]).then(result=>{
+        res.status(200).json(result);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({msg:'database error'});
+    });
+    
+});
+
 carRouter.get('/get/one/:carid',(req,res)=>{
     console.log(req.params.carid);
     getFullSingleCar(req.params.carid).then(result=>{

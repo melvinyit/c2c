@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, RouterState } from '@angular/router';
 import { car } from 'src/app/models/car';
 import { CarService } from 'src/app/services/car.service';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-list',
@@ -16,11 +17,31 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     const path = this.ar.routeConfig.path;
     console.log(path);
-    this.getListOfAllCar();
+
+    if(path.match('list-cars/search')){
+      console.log('regex search');
+      const search = this.ar.snapshot.params;
+      console.log({...search});
+      this.getListOfAllCarSearch({...search});
+
+    }
+    if(path.match('\ball\b')){
+      console.log('regex all');
+      this.getListOfAllCar();
+    }
   }
 
   getListOfAllCar(){
     this.carSrv.getListAllCar().then(r=>{
+      //console.log('result',r);
+      this.listOfCar=r;
+      console.log(this.listOfCar);
+    }).catch(e=>console.log(e));
+  }
+
+  getListOfAllCarSearch(params){
+    console.log(params);
+    this.carSrv.getListAllCarSearch(params).then(r=>{
       //console.log('result',r);
       this.listOfCar=r;
       console.log(this.listOfCar);
