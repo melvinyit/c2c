@@ -1,0 +1,7 @@
+<div *ngIf="carparklist">
+    <div fxLayout="column" fxLayoutAlign="start">
+        <div *ngFor="let c of carparklist; let i = index" >
+            {{i}}. Carpark No:{{c.carpark_number}} || Avaliablity: {{c.carpark_info[0].lots_available}}/{{c.carpark_info[0].total_lots}}
+        </div>
+    </div> 
+</div>

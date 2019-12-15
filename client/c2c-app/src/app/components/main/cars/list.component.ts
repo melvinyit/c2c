@@ -25,7 +25,7 @@ export class ListComponent implements OnInit {
       this.getListOfAllCarSearch({...search});
 
     }
-    if(path.match('\ball\b')){
+    if(path.match('list-cars/all')){
       console.log('regex all');
       this.getListOfAllCar();
     }

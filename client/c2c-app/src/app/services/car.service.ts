@@ -9,6 +9,7 @@ export class CarService {
 
   constructor(private http:HttpClient) { }
 
+  CARPARK='http://localhost:3000/api/external/lta';
   BASEURL = 'http://localhost:3000/api/car';
   ADDCAR='/secure/add';
   LISTALL='/list/all';
@@ -16,7 +17,7 @@ export class CarService {
   GETONECAR='/get/one/';
   GETCARBYOWNERID='/secure/owner/list';
   UPLOADPROFILEIMAGE='/secure/upload/car-image';
-
+  
   addCar(car:car):Promise<any>{
     console.log('add car service now');
     //console.log(car);
@@ -52,5 +53,11 @@ export class CarService {
   uploadCarImage(formData:FormData):Promise<any>{
     return this.http.post(this.BASEURL+this.UPLOADPROFILEIMAGE,formData).toPromise();
   }
+
+  getCarPark():Promise<any>{
+    console.log('find cars');
+    return this.http.get(this.CARPARK).toPromise();
+  }
+
 
 }

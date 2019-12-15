@@ -28,6 +28,7 @@ import { RoutingpageComponent } from './components/test/routingpage.component';
 import { DisplayComponent } from './components/display/display.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { CarparkComponent } from './components/test/carpark.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { environment } from '../environments/environment';
     RegisterOwnerComponent,
     LogoutComponent,
     RoutingpageComponent,
-    DisplayComponent
+    DisplayComponent,
+    CarparkComponent
   ],
   imports: [
     BrowserModule,

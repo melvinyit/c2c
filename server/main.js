@@ -15,6 +15,7 @@ const jwt = require('jsonwebtoken');
 const otplib = require('otplib');
 const qrcode = require('qrcode');
 const webpush = require('web-push');
+const request = require('request');
 
 //database util
 const sql = require('./util.sql');
@@ -29,6 +30,8 @@ const dbConf = require('./conf.db');
 dbConf.mysql.ssl = {ca: fs.readFileSync(dbConf.mysql.cacert)};
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY || dbConf.webpush.publicKey;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY  || dbConf.webpush.privateKey;
+//govapi format https://api.data.gov.sg/v1/transport/carpark-availability?date_time=YYYY-MM-DD[T]HH:mm:ss(SGT)
+const GOVAPI = 'https://api.data.gov.sg/v1/transport/carpark-availability';
 
 //sql
 const pool = mysql.createPool(dbConf.mysql);
@@ -414,7 +417,13 @@ carRouter.get('/list/all',(req,res)=>{
     const limit = 5;
     const offset = 0;
     selectListCarsPagination([limit,offset]).then(result=>{
-        res.status(200).json(result);
+        //res.status(200).json(result);
+        res.format({
+            'text/plain': function () {res.status(403).type('text/plain').send('forbidden')},
+            'text/html': function () {res.status(403).type('text/html').send('<p>forbidden</p>')},
+            'application/json': function () {res.status(200).json( result );},
+            'default': function () {res.status(406).send('Not Acceptable')}
+          });
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
@@ -432,7 +441,13 @@ carRouter.get('/list/search',(req,res)=>{
     //res.status(200).json({msg:'ok'});
     
     selectListCarsSearchPagination([minrate,maxrate,`%${model}%`,`%${model}%`,limit,offset]).then(result=>{
-        res.status(200).json(result);
+        //res.status(200).json(result);
+        res.format({
+            'text/plain': function () {res.status(403).type('text/plain').send('forbidden')},
+            'text/html': function () {res.status(403).type('text/html').send('<p>forbidden</p>')},
+            'application/json': function () {res.status(200).json( result );},
+            'default': function () {res.status(406).send('Not Acceptable')}
+          });
     }).catch(err=>{
         console.log(err);
         res.status(500).json({msg:'database error'});
@@ -599,6 +614,47 @@ bookingSecureRouter.put('/update/booking/status',(req,res)=>{
     });
 });
 //END booking api
+
+
+//external api
+app.route('/api/external/lta')
+    .get((req,res)=>{
+        const time = req.query.time || new Date().toISOString();
+        console.log(time);
+        const uri = GOVAPI+'?datetime='+time.substring(0,19);
+        console.log(uri);
+        /*
+        request.get(uri).on('response', (response)=>{
+            console.log(response.statusCode); // 200
+            console.log(response.headers['content-type']); // 'image/png'
+            console.log(response);
+          });
+        */
+       request.get(uri,(err,resp,body)=>{
+           if(err)
+            console.log(err);
+            const aaa = JSON.parse(body);
+            console.log(aaa);
+            //console.log(typeof(aaa.items))
+            //console.log(aaa.items[0]);
+            console.log('length:',aaa.items.length);
+            console.log('length:',aaa.items[0].carpark_data.length);
+            console.log('length:',aaa.items[0].carpark_data[0].carpark_info.length);
+            ///console.log('length:',aaa.items[0].carpark_data[0].carpark_info[0]);
+            res.status(200).json(aaa); 
+       })       
+    })
+    .post((req,res)=>{
+        if(!req.body.time){
+            return res.status(403).json({msg:'wrong format, provide time'})
+        }
+        const uri = GOVAPI+'?datetime='+req.body.time.substring(0,19);
+        request.get(uri,(err,resp,body)=>{
+           if(err)
+            console.log(err);
+            res.status(200).json(body); 
+       })
+    })
 
 //for webpush
 
